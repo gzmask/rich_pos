@@ -5,13 +5,14 @@
         compojure.core
         ring.adapter.jetty)
     (:require [compojure.handler :as handler]
+        [r0_rich.view.item.index :as item.index]
         [compojure.route :as route]))
 
 (defroutes app-routes
   (GET "/style.css" [] (css))
   (route/resources "/")
   (GET "/" [] (pages "home"))
-  (GET "/item/:id" [item_id] (pages "home"))
+  (GET "/item/:id" [item_id] (item.index/show item_id))
   (GET "/:page" [page] (pages page))
   (route/not-found (pages "404")))
 

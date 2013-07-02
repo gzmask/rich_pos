@@ -14,8 +14,11 @@ CREATE TABLE Item (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 item_name varchar(255),
 item_type int,
+barcode varchar(255),
+price float,
 user_id int
 );
+
 
 CREATE TABLE Item_type (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,6 +33,8 @@ insert into User (id, account_name, password, user_role) values (1, "gzmask", "1
 insert into User (id, account_name, password, user_role) values (2, "daisy", "123456", 2);
 insert into User (id, account_name, password, user_role) values (3, "tim", "123456", 2);
 
-insert into Item_type (type_name) values ("iphone case 001");
-insert into Item_type (type_name) values ("iphone case 002");
+insert into Item_type (type_name) values ("iphone case");
+
+insert into Item (item_name, price) values ("iphone case 1", 15.00);
+insert into Item (item_name, price) values ("iphone case 2", 25.00);
 

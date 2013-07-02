@@ -9,8 +9,8 @@
                  [ring/ring-jetty-adapter "1.1.8"]
                  [hiccup "1.0.3"]
                  [compojure "1.1.5"]
-                 [korma "0.3.0-RC5"]
                  [org.xerial/sqlite-jdbc "3.7.2"]
+                 [org.clojure/java.jdbc "0.3.0-alpha4"]
                  [org.clojure/clojure "1.5.1"]]
   :source-paths ["src/clj"]
   :ring {:handler r0_rich.handle/app
