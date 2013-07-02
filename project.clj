@@ -1,5 +1,5 @@
 (defproject r0-rich "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+  :description "POS"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -8,8 +8,9 @@
   :dependencies [[ring/ring-core "1.1.8"]
                  [ring/ring-jetty-adapter "1.1.8"]
                  [hiccup "1.0.3"]
-                 [prismatic/dommy "0.1.1"]
                  [compojure "1.1.5"]
+                 [korma "0.3.0-RC5"]
+                 [org.xerial/sqlite-jdbc "3.7.2"]
                  [org.clojure/clojure "1.5.1"]]
   :source-paths ["src/clj"]
   :ring {:handler r0_rich.handle/app
