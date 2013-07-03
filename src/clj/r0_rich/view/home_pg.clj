@@ -1,6 +1,7 @@
 (ns r0_rich.view.home_pg
     (:use hiccup.core
-        hiccup.page)
+          hiccup.page
+          r0_rich.view.template_pg)
     (:require [clojure.string :as s]))
 
 (defn def_home [title body]
@@ -9,6 +10,6 @@
         [:div.row-fluid {:id (str "pg_" (s/lower-case (s/replace title #"_|-|\s" "")))} 
           [:div.span10.offset1 body]]))
 
-(def home_pg (def_home "開始" 
+(def home_pg (pages (def_home "開始" 
                [:div.span2 "开始"]
-               ))
+               )))
