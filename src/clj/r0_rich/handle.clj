@@ -9,6 +9,7 @@
               [ring.middleware.params :as params]
               [r0_rich.view.item.index :as item.index]
               [r0_rich.view.item.show :as item.show]
+              [r0_rich.view.item.create :as item.create]
               [r0_rich.view.session.log :as log]
               [compojure.route :as route]))
 
@@ -19,12 +20,13 @@
   (GET "/style.css" [] (css))
   (GET "/" [] home_pg)
   (GET "/home" [] home_pg)
-  (GET "/items" [] (item.index/show))
+  (GET "/items" [] (item.index/index))
+  (GET "/items/new" {session :session} (item.create/new session))
+  (POST "/items/create" {params :params session :session} (item.create/create params session))
   (GET "/items/:id" {{id :id} :params} (item.show/show id))
   (GET "/login" {session :session} (log/login session))
   (GET "/logout" {session :session} (log/logout session))
-  (POST "/check" {params :params session :session}
-        (log/check (:username params) (:password params) session))
+  (POST "/check" {params :params session :session} (log/check (:username params) (:password params) session))
   (route/not-found no_pg))
 
 (def app
