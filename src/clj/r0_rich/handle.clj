@@ -2,7 +2,6 @@
     (:use r0_rich.view.css
           r0_rich.view.home_pg
           r0_rich.view.no_pg
-          r0_rich.view.template_pg
           compojure.core
           ring.adapter.jetty)
     (:require [compojure.handler :as handler]
