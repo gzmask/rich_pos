@@ -13,3 +13,4 @@
 (def home_pg (pages (def_home "開始" 
                [:div.span2 "开始"]
                )))
+

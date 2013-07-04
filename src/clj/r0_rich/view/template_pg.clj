@@ -10,9 +10,9 @@
                (list [:div.span2 [:a {:href (str (s/lower-case (s/replace id #"_|-|\s" "")))}[(keyword (str "i." icon)) name]]]))
              names ids icons)))
 
-(def nav_bar (def_nav ["開始" "商品"] 
-                       ["/home" "/items"]
-                       ["icon-home" "icon-home"]))
+(def nav_bar (def_nav ["開始" "商品" "登錄"] 
+                       ["/home" "/items" "/login"]
+                       ["icon-home" "icon-home" "icon-home"]))
 
 (defn pages [page]
   "get page by pagename"
