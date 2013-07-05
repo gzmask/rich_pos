@@ -25,7 +25,7 @@
           [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" id)}]
           (include-js "/vendor/qr/jquery.min.js")
           (include-js "/vendor/qr/qrcode.js")
-          (include-js "/qr.js"))))
+          (include-js "/app.js"))))
 
 (defn show [id]
   (let [item (first (j/with-connection SQLDB
