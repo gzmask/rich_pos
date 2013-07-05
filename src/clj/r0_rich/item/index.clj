@@ -1,4 +1,4 @@
-(ns r0_rich.view.item.index
+(ns r0_rich.item.index
     (:use hiccup.core
           r0_rich.env
           r0_rich.pages.template_pg

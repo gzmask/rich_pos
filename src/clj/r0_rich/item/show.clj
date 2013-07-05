@@ -1,17 +1,10 @@
-;; list all items
-(ns r0_rich.view.item.show
+(ns r0_rich.item.show
     (:use hiccup.core
           r0_rich.env
           r0_rich.pages.template_pg
           hiccup.page)
     (:require [clojure.java.jdbc :as j]
               [clojure.string :as s]))
-
-;(seq (first (j/with-connection SQLDB (j/with-query-results rs [(str "select * from Item where id = '2';")] (doall rs)))))
-;(keys (last Index_Items))
-;(type (first Index_Items))
-;(:item_name (first Index_Items))
-;(seq Index_Items)
 
 (defn def_qr [title body]
   "compose page, convert title as id"

@@ -7,10 +7,10 @@
     (:require [compojure.handler :as handler]
               [ring.middleware.session :as session]
               [ring.middleware.params :as params]
-              [r0_rich.view.item.index :as item.index]
-              [r0_rich.view.item.show :as item.show]
-              [r0_rich.view.item.create :as item.create]
-              [r0_rich.view.session.log :as log]
+              [r0_rich.item.index :as item.index]
+              [r0_rich.item.show :as item.show]
+              [r0_rich.item.create :as item.create]
+              [r0_rich.session.log :as log]
               [compojure.route :as route]))
 
 

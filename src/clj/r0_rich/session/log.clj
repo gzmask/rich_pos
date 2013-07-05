@@ -1,4 +1,4 @@
-(ns r0_rich.view.session.log
+(ns r0_rich.session.log
     (:use hiccup.core
           hiccup.page
           r0_rich.env

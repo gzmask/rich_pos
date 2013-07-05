@@ -1,4 +1,4 @@
-(ns r0_rich.view.item.create
+(ns r0_rich.item.create
     (:use hiccup.core
           hiccup.page
           r0_rich.env
