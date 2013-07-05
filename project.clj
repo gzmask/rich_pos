@@ -19,7 +19,7 @@
   :profiles {:dev {:dependencies [[ring-server "0.2.8"]
                                   [ring-mock "0.1.3"]]}}
   :cljsbuild{:builds [{:source-paths ["src/cljs"]
-                       :compiler {:output-to "resources/public/app.js"
+                       :compiler {:output-to "resources/public/qr.js"
                                   :externs ["src/cljs/r0_rich/externs.js"]
                                   :optimizations :advanced
                                   :pretty-print true}}]})

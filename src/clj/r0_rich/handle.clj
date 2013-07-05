@@ -1,7 +1,7 @@
 (ns r0_rich.handle
-    (:use r0_rich.view.css
-          r0_rich.view.home_pg
-          r0_rich.view.no_pg
+    (:use r0_rich.pages.css
+          r0_rich.pages.home_pg
+          r0_rich.pages.no_pg
           compojure.core
           ring.adapter.jetty)
     (:require [compojure.handler :as handler]

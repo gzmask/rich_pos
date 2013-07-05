@@ -1,4 +1,4 @@
-(ns r0_rich.view.template_pg
+(ns r0_rich.pages.template_pg
     (:use hiccup.page
           hiccup.core)
     (:require [clojure.string :as s]))

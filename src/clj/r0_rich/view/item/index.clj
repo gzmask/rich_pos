@@ -1,7 +1,7 @@
 (ns r0_rich.view.item.index
     (:use hiccup.core
           r0_rich.env
-          r0_rich.view.template_pg
+          r0_rich.pages.template_pg
           hiccup.page)
     (:require [clojure.java.jdbc :as j]))
 

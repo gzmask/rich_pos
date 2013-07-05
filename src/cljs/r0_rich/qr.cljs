@@ -1,4 +1,4 @@
-(ns r0_rich.app)
+(ns r0_rich.qr)
 
 (defn makeCode []
   (let [qr_str (.-value (.getElementById js/document "qr_str"))

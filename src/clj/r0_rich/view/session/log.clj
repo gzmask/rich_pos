@@ -2,7 +2,7 @@
     (:use hiccup.core
           hiccup.page
           r0_rich.env
-          r0_rich.view.template_pg)
+          r0_rich.pages.template_pg)
     (:require [clojure.java.jdbc :as j]
               [clojure.java.jdbc.sql :as s]))
 

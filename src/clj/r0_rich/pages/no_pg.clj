@@ -1,7 +1,7 @@
-(ns r0_rich.view.no_pg
+(ns r0_rich.pages.no_pg
     (:use hiccup.core
           hiccup.page
-          r0_rich.view.template_pg)
+          r0_rich.pages.template_pg)
     (:require [clojure.string :as s]))
 
 (defn def_no [title body]
