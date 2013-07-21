@@ -11,7 +11,9 @@
        (pages (list [:a {:href "/items/new"} "添加商品"]
                     [:h2 "items"]
                     (for [item items]
-                      [:div.row-fluid [:a.span12 {:href (str "/items/"(:id item))}
-                                       (list [:div.span2 (:item_name item)]
-                                             [:div.span1 (:price item)]
-                                             [:div.span2 (:quantity item)])]])))))
+                      [:div.row-fluid
+                       [:a.span2 {:href (str "/items/"(:id item))} (:item_name item)]
+                       [:div.span1 (:price item)]
+                       [:div.span1 (:quantity item)]
+                       [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改"]
+                       [:a.span2 {:href (str "/items/"(:id item)"/remove")} "删除"]])))))
