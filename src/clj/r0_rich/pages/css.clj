@@ -13,6 +13,11 @@
             padding: 10px;
             background-color: rgba(0,0,0,0.8);
           }
+          #qrcode {
+            color: #000;
+            background-color: #fff;
+            padding: 15px;
+          }
           div.content {
             font-size: 20px;}
           div.navigation_bar {

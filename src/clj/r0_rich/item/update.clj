@@ -26,9 +26,6 @@
            [:div.row-fluid
             [:lable.span2.offset1 "成本:"]
             [:input.span3 {:name "cost" :type "text" :value (:cost item)}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "库存:"]
-            [:input.span3 {:name "quantity" :type "text" :value (:quantity item)}]]
             [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
            [:div.row-fluid
             [:input.span1.offset1 {:type "submit" :value "修改"}]]])

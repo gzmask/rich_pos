@@ -23,7 +23,7 @@
   (GET "/items" [] (item.index/index))
   (GET "/items/new" {session :session} (item.create/new session))
   (POST "/items/create" {params :params session :session} (item.create/create params session))
-  (GET "/items/:id" {{id :id} :params} (item.show/show id))
+  (GET "/items/:id" {params :params session :session} (item.show/show (:id params) session))
   (GET "/items/:id/update" {{id :id} :params session :session} (item.update/update id session))
   (POST "/items/:id/change" {params :params session :session} (item.update/change params session))
   (GET "/items/:id/remove" {{id :id} :params session :session} (item.delete/remove id session))
