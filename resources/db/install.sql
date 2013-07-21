@@ -17,7 +17,6 @@ item_type int,
 plucode varchar(255),
 price float,
 cost float,
-quantity int,
 user_id int
 );
 
@@ -37,6 +36,6 @@ insert into User (id, account_name, password, user_role) values (3, "tim", "1234
 
 insert into Item_type (type_name) values ("iphone case");
 
-insert into Item (item_name, price) values ("iphone case 1", 15.00);
-insert into Item (item_name, price) values ("iphone case 2", 25.00);
+insert into Item (item_name, price, cost) values ("iphone case 1", 15.00, 1.00);
+insert into Item (item_name, price, cost) values ("iphone case 2", 25.00, 1.00);
 

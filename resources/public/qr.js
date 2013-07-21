@@ -1,4 +1,4 @@
-var d = null;
+var e = null;
 function f(a) {
   var b = typeof a;
   if("object" == b) {
@@ -31,11 +31,11 @@ function f(a) {
 }
 Math.floor(2147483648 * Math.random()).toString(36);
 function g(a, b) {
-  var c = Array.prototype.slice.call(arguments), e = c.shift();
-  if("undefined" == typeof e) {
+  var c = Array.prototype.slice.call(arguments), d = c.shift();
+  if("undefined" == typeof d) {
     throw Error("[goog.string.format] Template required");
   }
-  return e.replace(/%([0\-\ \+]*)(\d+)?(\.(\d+))?([%sfdiu])/g, function(a, b, e, s, I, t, J, K) {
+  return d.replace(/%([0\-\ \+]*)(\d+)?(\.(\d+))?([%sfdiu])/g, function(a, b, d, s, H, t, I, J) {
     if("%" == t) {
       return"%"
     }
@@ -44,32 +44,32 @@ function g(a, b) {
       throw Error("[goog.string.format] Not enough arguments");
     }
     arguments[0] = u;
-    return g.a[t].apply(d, arguments)
+    return g.a[t].apply(e, arguments)
   })
 }
 g.a = {};
 g.a.s = function(a, b, c) {
   return isNaN(c) || "" == c || a.length >= c ? a : a = -1 < b.indexOf("-", 0) ? a + Array(c - a.length + 1).join(" ") : Array(c - a.length + 1).join(" ") + a
 };
-g.a.f = function(a, b, c, e, j) {
-  e = a.toString();
-  isNaN(j) || "" == j || (e = a.toFixed(j));
-  var i;
-  i = 0 > a ? "-" : 0 <= b.indexOf("+") ? "+" : 0 <= b.indexOf(" ") ? " " : "";
-  0 <= a && (e = i + e);
-  if(isNaN(c) || e.length >= c) {
-    return e
+g.a.f = function(a, b, c, d, j) {
+  d = a.toString();
+  isNaN(j) || "" == j || (d = a.toFixed(j));
+  var h;
+  h = 0 > a ? "-" : 0 <= b.indexOf("+") ? "+" : 0 <= b.indexOf(" ") ? " " : "";
+  0 <= a && (d = h + d);
+  if(isNaN(c) || d.length >= c) {
+    return d
   }
-  e = isNaN(j) ? Math.abs(a).toString() : Math.abs(a).toFixed(j);
-  a = c - e.length - i.length;
-  return e = 0 <= b.indexOf("-", 0) ? i + e + Array(a + 1).join(" ") : i + Array(a + 1).join(0 <= b.indexOf("0", 0) ? "0" : " ") + e
+  d = isNaN(j) ? Math.abs(a).toString() : Math.abs(a).toFixed(j);
+  a = c - d.length - h.length;
+  return d = 0 <= b.indexOf("-", 0) ? h + d + Array(a + 1).join(" ") : h + Array(a + 1).join(0 <= b.indexOf("0", 0) ? "0" : " ") + d
 };
-g.a.d = function(a, b, c, e, j, i, F, s) {
-  return g.a.f(parseInt(a, 10), b, c, e, 0, i, F, s)
+g.a.d = function(a, b, c, d, j, h, E, s) {
+  return g.a.f(parseInt(a, 10), b, c, d, 0, h, E, s)
 };
 g.a.i = g.a.d;
 g.a.u = g.a.d;
-function h(a) {
+function i(a) {
   return a
 }
 var k = ["cljs", "core", "set_print_fn_BANG_"], l = this;
@@ -77,111 +77,109 @@ var k = ["cljs", "core", "set_print_fn_BANG_"], l = this;
 for(var m;k.length && (m = k.shift());) {
   var n;
   if(n = !k.length) {
-    n = void 0 !== h
+    n = void 0 !== i
   }
-  n ? l[m] = h : l = l[m] ? l[m] : l[m] = {}
+  n ? l[m] = i : l = l[m] ? l[m] : l[m] = {}
 }
 function p(a) {
   var b = "string" == typeof a;
   return b ? "\ufdd0" !== a.charAt(0) : b
 }
-function q(a, b) {
-  return a[f(b == d ? d : b)] ? !0 : a._ ? !0 : !1
+function q(a) {
+  var b = r;
+  return b[f(a == e ? e : a)] ? !0 : b._ ? !0 : !1
 }
-function r(a) {
-  return a == d ? d : a.constructor
+function v(a) {
+  var b = a == e ? e : a.constructor, b = (b != e && !1 !== b ? b.k : b) != e && !1 !== (b != e && !1 !== b ? b.k : b) ? b.l : f(a);
+  return Error(["No protocol method ILookup.-lookup defined for type ", b, ": ", a].join(""))
 }
-function v(a, b) {
-  var c = r.call(d, b), c = (c != d && !1 !== c ? c.k : c) != d && !1 !== (c != d && !1 !== c ? c.k : c) ? c.l : f(b);
-  return Error(["No protocol method ", a, " defined for type ", c, ": ", b].join(""))
-}
-var w = {}, x, y = d;
-function z(a, b) {
-  if(a ? a.g : a) {
-    return a.g(a, b)
+var r = {}, w, x = e;
+function y(a, b) {
+  if(a ? a.e : a) {
+    return a.e(a, b)
   }
   var c;
-  c = x[f(a == d ? d : a)];
-  if(!c && (c = x._, !c)) {
-    throw v.call(d, "ILookup.-lookup", a);
+  c = w[f(a == e ? e : a)];
+  if(!c && (c = w._, !c)) {
+    throw v(a);
   }
-  return c.call(d, a, b)
+  return c.call(e, a, b)
 }
-function A(a, b, c) {
-  if(a ? a.h : a) {
-    return a.h(a, b, c)
+function z(a, b, c) {
+  if(a ? a.g : a) {
+    return a.g(a, b, c)
   }
-  var e;
-  e = x[f(a == d ? d : a)];
-  if(!e && (e = x._, !e)) {
-    throw v.call(d, "ILookup.-lookup", a);
+  var d;
+  d = w[f(a == e ? e : a)];
+  if(!d && (d = w._, !d)) {
+    throw v(a);
   }
-  return e.call(d, a, b, c)
+  return d.call(e, a, b, c)
 }
-y = function(a, b, c) {
+x = function(a, b, c) {
   switch(arguments.length) {
     case 2:
-      return z.call(this, a, b);
+      return y.call(this, a, b);
     case 3:
-      return A.call(this, a, b, c)
+      return z.call(this, a, b, c)
   }
   throw Error("Invalid arity: " + arguments.length);
 };
-y.b = z;
-y.c = A;
-x = y;
-var B, C = d;
-function D(a, b) {
+x.b = y;
+x.c = z;
+w = x;
+var A, B = e;
+function C(a, b) {
   var c;
-  if(a == d) {
-    c = d
+  if(a == e) {
+    c = e
   }else {
     if(c = a) {
-      c = (c = a.j & 256) ? c : a.e
+      c = (c = a.j & 256) ? c : a.h
     }
-    c = c ? x.call(d, a, b) : a instanceof Array ? b < a.length ? a[b] : d : p.call(d, a) ? b < a.length ? a[b] : d : q.call(d, w, a) ? x.call(d, a, b) : d
+    c = c ? a.e(a, b) : a instanceof Array ? b < a.length ? a[b] : e : p(a) ? b < a.length ? a[b] : e : q(a) ? w.b(a, b) : e
   }
   return c
 }
-function E(a, b, c) {
-  if(a != d) {
-    var e;
-    if(e = a) {
-      e = (e = a.j & 256) ? e : a.e
+function D(a, b, c) {
+  if(a != e) {
+    var d;
+    if(d = a) {
+      d = (d = a.j & 256) ? d : a.h
     }
-    a = e ? x.call(d, a, b, c) : a instanceof Array ? b < a.length ? a[b] : c : p.call(d, a) ? b < a.length ? a[b] : c : q.call(d, w, a) ? x.call(d, a, b, c) : c
+    a = d ? a.g(a, b, c) : a instanceof Array ? b < a.length ? a[b] : c : p(a) ? b < a.length ? a[b] : c : q(a) ? w.c(a, b, c) : c
   }else {
     a = c
   }
   return a
 }
-C = function(a, b, c) {
+B = function(a, b, c) {
   switch(arguments.length) {
     case 2:
-      return D.call(this, a, b);
+      return C.call(this, a, b);
     case 3:
-      return E.call(this, a, b, c)
+      return D.call(this, a, b, c)
   }
   throw Error("Invalid arity: " + arguments.length);
 };
-C.b = D;
-C.c = E;
-B = C;
-var G = d, G = function(a, b, c) {
+B.b = C;
+B.c = D;
+A = B;
+var F = e, F = function(a, b, c) {
   switch(arguments.length) {
     case 2:
-      return B.call(d, b, this.toString());
+      return A.b(b, this.toString());
     case 3:
-      return B.call(d, b, this.toString(), c)
+      return A.c(b, this.toString(), c)
   }
   throw Error("Invalid arity: " + arguments.length);
 };
-String.prototype.call = G;
+String.prototype.call = F;
 String.prototype.apply = function(a, b) {
   return a.call.apply(a, [a].concat(b.slice()))
 };
 String.prototype.apply = function(a, b) {
-  return 2 > b.length ? B.call(d, b[0], a) : B.call(d, b[0], a, b[1])
+  return 2 > b.length ? A.b(b[0], a) : A.c(b[0], a, b[1])
 };
-var H = document.getElementById("qr_str").value;
-(new QRCode(document.getElementById("qrcode"), {width:250, height:250})).makeCode(H);
+var G = document.URL;
+(new QRCode(document.getElementById("qrcode"), {width:250, height:250})).makeCode(G);

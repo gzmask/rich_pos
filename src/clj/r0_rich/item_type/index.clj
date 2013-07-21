@@ -1,4 +1,4 @@
-(ns r0_rich.item.index
+(ns r0_rich.item_type.index
     (:use hiccup.core
           r0_rich.env
           r0_rich.pages.template_pg
@@ -7,8 +7,8 @@
 
 (defn index []
   (let [items (j/with-connection SQLDB
-                (j/with-query-results rs ["select * from Item"] (doall rs)))]
-       (pages (list [:a {:href "/items/new"} "添加商品"]
+                (j/with-query-results rs ["select * from Item_type"] (doall rs)))]
+       (pages (list [:a {:href "/items/new"} "添加商品类型"]
                     [:h2 "items"]
                     (for [item items]
                       [:div.row-fluid [:a.span12 {:href (str "/items/"(:id item))}
