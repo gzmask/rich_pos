@@ -14,8 +14,10 @@ CREATE TABLE Item (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 item_name varchar(255),
 item_type int,
-barcode varchar(255),
+plucode varchar(255),
 price float,
+cost float,
+quantity int,
 user_id int
 );
 

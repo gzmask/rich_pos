@@ -13,8 +13,6 @@
               [r0_rich.session.log :as log]
               [compojure.route :as route]))
 
-
-
 (defroutes app-routes
   (route/resources "/")
   (GET "/style.css" [] (css))
@@ -39,4 +37,3 @@
 (defonce server (run-jetty #'app {:port 3000 :join? false}))
 (.start server)
 (.stop server))
-

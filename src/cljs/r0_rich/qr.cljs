@@ -6,5 +6,3 @@
     (.makeCode qrcode qr_str)))
 
 (makeCode)
-  
-
