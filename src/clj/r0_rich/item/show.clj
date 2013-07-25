@@ -36,7 +36,6 @@
           (include-js "/qr.js")))))
 
 (defn item_pg [item]
-  (let [profit (- (:price item) (:cost item))]
   (def_item "商品信息"
     (list [:div.row-fluid [:div.span2 "Item name: "]
            [:div.span5 (:item_name item)]]
@@ -46,12 +45,8 @@
            [:div.span5 (:plucode item)]]
           [:div.row-fluid [:div.span2 "Price: "]
            [:div.span5 (:price item)]]
-          [:div.row-fluid [:div.span2 "Cost: "]
-           [:div.span5 (:cost item)]]
-          [:div.row-fluid [:div.span2 "Profit: "]
-           [:div.span5 profit]]
           [:div.row-fluid [:div.span2 "Quantity: "]
-           [:div.span5 (:quantity item)]]))))
+           [:div.span5 (:quantity item)]])))
 
 (defn show [id session]
   (let [item (first (j/with-connection SQLDB

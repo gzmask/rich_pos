@@ -1,1 +1,1 @@
-sudo lein ring server-headless 3000&
+lein ring server-headless 3000&
