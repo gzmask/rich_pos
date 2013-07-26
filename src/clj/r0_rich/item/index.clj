@@ -3,11 +3,12 @@
           r0_rich.env
           r0_rich.pages.template_pg
           hiccup.page)
-    (:require [clojure.java.jdbc :as j]))
+    (:require [clojure.java.jdbc :as j]
+              [clojure.java.jdbc.sql :as s]))
 
 (defn index []
   (let [items (j/with-connection SQLDB
-                (j/with-query-results rs ["select * from Item"] (doall rs)))]
+                (j/with-query-results rs ["select * from Item GROUP BY plucode"] (doall rs)))]
        (pages (list [:a {:href "/items/new"} "添加商品"]
                     [:h2 "items"]
                     (for [item items]
