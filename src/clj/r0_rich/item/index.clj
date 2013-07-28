@@ -13,8 +13,8 @@
                     [:h2 "items"]
                     (for [item items]
                       [:div.row-fluid
-                       [:a.span2 {:href (str "/items/"(:id item))} (:item_name item)]
+                       [:a.span3 {:href (str "/items/"(:id item))} (:item_name item)]
                        [:div.span1 (:price item)]
                        [:div.span1 (:quantity item)]
-                       [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改"]
-                       [:a.span2 {:href (str "/items/"(:id item)"/remove")} "删除"]])))))
+                       [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改所有"]
+                       [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有"]])))))

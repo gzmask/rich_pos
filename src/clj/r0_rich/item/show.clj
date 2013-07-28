@@ -26,14 +26,24 @@
           [:div.row-fluid [:div.span2 "Cost: "]
            [:div.span5 (:cost item)]]
           [:div.row-fluid [:div.span2 "Profit: "]
-           [:div.span5 profit "&nbsp;&nbsp;[total:" (* profit (count items)) "]"]]
+           [:div.span5 profit]]
           [:div.row-fluid [:div.span2 "Quantity: "]
            [:div.span5 (count items)]]
           [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
            [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]
           (include-js "/vendor/qr/jquery.min.js")
           (include-js "/vendor/qr/qrcode.js")
-          (include-js "/qr.js")))))
+          (include-js "/qr.js")
+          [:br] [:br] [:br]
+          [:div.row-fluid [:div.span2 "同型号商品:"]]
+          (for [item items]
+            [:div.row-fluid
+                       [:a.span3 {:href (str "/items/"(:id item))} (:item_name item)]
+                       [:div.span1 (:price item)]
+                       [:div.span1 (:quantity item)]
+                       [:a.span2 {:href (str "/items/"(:id item)"/single_update")} "单个修改"]
+                       [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "单个删除"]])
+          ))))
 
 (defn item_pg [item items]
   (def_item "商品信息"
