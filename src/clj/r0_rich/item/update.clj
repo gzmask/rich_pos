@@ -19,7 +19,7 @@
             [:input.span3 {:name "item_type" :type "text" :value (:item_type item)}]]
            [:div.row-fluid
             [:lable.span2.offset1 "PLU代码:"]
-            [:input.span3 {:name "plucode" :type "text" :value (:plucode item)}]]
+            [:input.span3 {:name "plucode" :type "text" :value (:plucode item) :readonly "readonly"}]]
            [:div.row-fluid
             [:lable.span2.offset1 "价格:"]
             [:input.span3 {:name "price" :type "text" :value (:price item)}]]
@@ -33,7 +33,11 @@
 
 
 (defn change [params session]
+  (let [items (j/with-connection SQLDB 
+                (j/with-query-results rs [(str "select * from Item where plucode = '" (:plucode params) "';")] (doall rs)))]
   (if (:login session)
-    (do (j/update! SQLDB :Item params (s/where {:id (Integer. (:id params))}))
-        (pages [:h2 "修改成功."]))
-    (pages [:a {:href "/login"} "請登錄>>"])))
+    (do 
+      (doseq [item items] 
+        (j/update! SQLDB :Item (assoc params :id (:id item)) (s/where {:id (:id item)}))) 
+      (pages [:h2 "修改成功."]))
+    (pages [:a {:href "/login"} "請登錄>>"]))))

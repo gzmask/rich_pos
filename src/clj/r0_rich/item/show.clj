@@ -12,7 +12,7 @@
         [:div.row-fluid {:id (str "pg_" (s/lower-case (s/replace title #"_|-|\s" "")))}
           [:div.span10.offset2 body]]))
 
-(defn admin_item_pg [item]
+(defn admin_item_pg [item items]
   (let [profit (- (:price item) (:cost item))]
   (def_item "商品信息"
     (list [:div.row-fluid [:div.span2 "Item name: "]
@@ -26,16 +26,16 @@
           [:div.row-fluid [:div.span2 "Cost: "]
            [:div.span5 (:cost item)]]
           [:div.row-fluid [:div.span2 "Profit: "]
-           [:div.span5 profit]]
+           [:div.span5 profit "&nbsp;&nbsp;[total:" (* profit (count items)) "]"]]
           [:div.row-fluid [:div.span2 "Quantity: "]
-           [:div.span5 (:quantity item)]]
+           [:div.span5 (count items)]]
           [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
            [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]
           (include-js "/vendor/qr/jquery.min.js")
           (include-js "/vendor/qr/qrcode.js")
           (include-js "/qr.js")))))
 
-(defn item_pg [item]
+(defn item_pg [item items]
   (def_item "商品信息"
     (list [:div.row-fluid [:div.span2 "Item name: "]
            [:div.span5 (:item_name item)]]
@@ -46,11 +46,13 @@
           [:div.row-fluid [:div.span2 "Price: "]
            [:div.span5 (:price item)]]
           [:div.row-fluid [:div.span2 "Quantity: "]
-           [:div.span5 (:quantity item)]])))
+           [:div.span5 (count items)]])))
 
 (defn show [id session]
   (let [item (first (j/with-connection SQLDB
-               (j/with-query-results rs [(str "select * from Item where id = '" id "';")] (doall rs))))]
+               (j/with-query-results rs [(str "select * from Item where id = '" id "';")] (doall rs))))
+        items (j/with-connection SQLDB 
+                (j/with-query-results rs [(str "select * from Item where plucode = '" (:plucode item) "';")] (doall rs)))]
     (if (:login session) 
-      (pages (admin_item_pg item))
-      (pages (item_pg item)))))
+      (pages (admin_item_pg item items))
+      (pages (item_pg item items)))))

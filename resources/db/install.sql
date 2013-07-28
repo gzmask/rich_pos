@@ -38,4 +38,3 @@ insert into Item_type (type_name) values ("iphone case");
 
 insert into Item (item_name, price, cost) values ("iphone case 1", 15.00, 1.00);
 insert into Item (item_name, price, cost) values ("iphone case 2", 25.00, 1.00);
-
