@@ -8,6 +8,8 @@
               [clojure.string :as str]))
 
 (defn new [session]
+  (let [types (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
   (if (:login session)
     (pages [:form.span10 {:action "/items/create" :method "post"}
            [:div.row-fluid
@@ -15,7 +17,9 @@
             [:input.span3 {:name "item_name" :type "text"}]]
            [:div.row-fluid
             [:lable.span2.offset1 "商品类型:"]
-            [:input.span3 {:name "item_type" :type "text"}]]
+            [:select.span3 {:name "item_type"}
+             (for [type types]
+               [:option {:value (:id type)} (:type_name type)])]]
            [:div.row-fluid
             [:lable.span2.offset1 "PLU代码:"]
             [:input.span3 {:name "plucode" :type "text"}]]
@@ -31,7 +35,7 @@
             [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
            [:div.row-fluid
             [:input.span1.offset1 {:type "submit" :value "添加"}]]])
-    (pages [:a {:href "/login"} "請登錄>>"])))
+    (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn create [params session]
   (if (:login session)
@@ -53,12 +57,14 @@
           [:div.span10.offset2 body]]))
 
 (defn admin_item_pg [item items]
-  (let [profit (- (:price item) (:cost item))]
+  (let [profit (- (:price item) (:cost item))
+        type (first (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
   (def_item "商品信息"
     (list [:div.row-fluid [:div.span2 "Item name: "]
            [:div.span5 (:item_name item)]]
           [:div.row-fluid [:div.span2 "Item type: "]
-           [:div.span5 (:item_type item)]]
+           [:div.span5 (:type_name type)]]
           [:div.row-fluid [:div.span2 "PLU code: "]
            [:div.span5 (:plucode item)]]
           [:div.row-fluid [:div.span2 "Price: "]
@@ -71,6 +77,12 @@
            [:div.span5 (count items)]]
           [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
            [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]
+          [:br]
+          [:div.row-fluid 
+           [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改所有同型商品"] 
+           [:a.span2 {:href (str "/items/"(:id item)"/single_update")} "修改此商品"]
+           [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有同型商品"]
+           [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "删除此商品"]]
           (include-js "/vendor/qr/jquery.min.js")
           (include-js "/vendor/qr/qrcode.js")
           (include-js "/qr.js")
@@ -82,21 +94,22 @@
                        [:div.span1 (:price item)]
                        [:div.span1 (:quantity item)]
                        [:a.span2 {:href (str "/items/"(:id item)"/single_update")} "单个修改"]
-                       [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "单个删除"]])
-          ))))
+                       [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "单个删除"]])))))
 
 (defn item_pg [item items]
+  (let [type (first (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
   (def_item "商品信息"
     (list [:div.row-fluid [:div.span2 "Item name: "]
            [:div.span5 (:item_name item)]]
           [:div.row-fluid [:div.span2 "Item type: "]
-           [:div.span5 (:item_type item)]]
+           [:div.span5 (:type_name type)]]
           [:div.row-fluid [:div.span2 "PLU code: "]
            [:div.span5 (:plucode item)]]
           [:div.row-fluid [:div.span2 "Price: "]
            [:div.span5 (:price item)]]
           [:div.row-fluid [:div.span2 "Quantity: "]
-           [:div.span5 (count items)]])))
+           [:div.span5 (count items)]]))))
 
 (defn show [id session]
   (let [item (first (j/with-connection SQLDB
