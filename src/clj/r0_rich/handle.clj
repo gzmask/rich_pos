@@ -12,6 +12,7 @@
               [r0_rich.item.create :as item.create]
               [r0_rich.item.update :as item.update]
               [r0_rich.item.delete :as item.delete]
+              [r0_rich.item.crud :as item]
               [r0_rich.item_type.crud :as item_type]
               [r0_rich.session.log :as log]
               [compojure.route :as route]))
@@ -21,16 +22,16 @@
   (GET "/style.css" [] (css))
   (GET "/" [] home_pg)
   (GET "/home" [] home_pg)
-  (GET "/items" {session :session} (item.index/index session))
-  (GET "/items/new" {session :session} (item.create/new session))
-  (POST "/items/create" {params :params session :session} (item.create/create params session))
-  (GET "/items/:id" {params :params session :session} (item.show/show (:id params) session))
-  (GET "/items/:id/single_update" {{id :id} :params session :session} (item.update/single_update id session))
-  (POST "/items/:id/single_change" {params :params session :session} (item.update/single_change params session))
-  (GET "/items/:id/update" {{id :id} :params session :session} (item.update/update id session))
-  (POST "/items/:id/change" {params :params session :session} (item.update/change params session))
-  (GET "/items/:id/single_remove" {{id :id} :params session :session} (item.delete/single_remove id session))
-  (GET "/items/:plucode/remove" {{plucode :plucode} :params session :session} (item.delete/plu_remove plucode session))
+  (GET "/items" {session :session} (item/index session))
+  (GET "/items/new" {session :session} (item/new session))
+  (POST "/items/create" {params :params session :session} (item/create params session))
+  (GET "/items/:id" {params :params session :session} (item/show (:id params) session))
+  (GET "/items/:id/single_update" {{id :id} :params session :session} (item/single_update id session))
+  (POST "/items/:id/single_change" {params :params session :session} (item/single_change params session))
+  (GET "/items/:id/update" {{id :id} :params session :session} (item/update id session))
+  (POST "/items/:id/change" {params :params session :session} (item/change params session))
+  (GET "/items/:id/single_remove" {{id :id} :params session :session} (item/single_remove id session))
+  (GET "/items/:plucode/remove" {{plucode :plucode} :params session :session} (item/plu_remove plucode session))
   (GET "/item_types" {session :session} (item_type/index session))
   (GET "/item_types/new" {session :session} (item_type/new session))
   (POST "/item_types/create" {params :params session :session} (item_type/create params session))
