@@ -6,14 +6,19 @@
     (:require [clojure.java.jdbc.sql :as s] 
               [clojure.java.jdbc :as j]))
 
-(defn index []
+(defn index [session]
   (let [item_types (j/with-connection SQLDB
                 (j/with-query-results rs ["select * from Item_type"] (doall rs)))]
+    (if (:login session)
        (pages (list [:a {:href "/item_types/new"} "添加商品类型"]
                     [:h2 "item_types"]
                     (for [item_type item_types]
                       [:div.row-fluid [:a.span12 {:href (str "/item_types/"(:id item_type))} 
-                                       [:div.span2 (:type_name item_type)]]])))))
+                                       [:div.span2 (:type_name item_type)]]])))
+       (pages (list [:h2 "item_types"]
+                    (for [item_type item_types]
+                      [:div.row-fluid [:a.span12 {:href (str "/item_types/"(:id item_type))} 
+                                       [:div.span2 (:type_name item_type)]]]))))))
 
 (defn new [session]
   (if (:login session)

@@ -8,7 +8,9 @@
 
 (defn single_update [id session]
   (let [item (first (j/with-connection SQLDB
-               (j/with-query-results rs [(str "select * from Item where id = '" id "';")] (doall rs))))]
+               (j/with-query-results rs [(str "select * from Item where id = '" id "';")] (doall rs))))
+        types (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
   (if (:login session)
     (pages [:form.span10 {:action (str "/items/" id "/single_change") :method "post"}
            [:div.row-fluid
@@ -16,7 +18,9 @@
             [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
            [:div.row-fluid
             [:lable.span2.offset1 "商品类型:"]
-            [:input.span3 {:name "item_type" :type "text" :value (:item_type item)}]]
+            [:select.span3 {:name "item_type"}
+             (for [type types]
+               [:option {:value (:id type)} (:type_name type)])]]
            [:div.row-fluid
             [:lable.span2.offset1 "PLU代码:"]
             [:input.span3 {:name "plucode" :type "text" :value (:plucode item)}]]
@@ -40,7 +44,9 @@
 
 (defn update [id session]
   (let [item (first (j/with-connection SQLDB
-               (j/with-query-results rs [(str "select * from Item where id = '" id "';")] (doall rs))))]
+               (j/with-query-results rs [(str "select * from Item where id = '" id "';")] (doall rs))))
+        types (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
   (if (:login session)
     (pages [:form.span10 {:action (str "/items/" id "/change") :method "post"}
            [:div.row-fluid
@@ -48,7 +54,9 @@
             [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
            [:div.row-fluid
             [:lable.span2.offset1 "商品类型:"]
-            [:input.span3 {:name "item_type" :type "text" :value (:item_type item)}]]
+            [:select.span3 {:name "item_type"}
+             (for [type types]
+               [:option {:value (:id type)} (:type_name type)])]]
            [:div.row-fluid
             [:lable.span2.offset1 "PLU代码:"]
             [:input.span3 {:name "plucode" :type "text" :value (:plucode item) :readonly "readonly"}]]
