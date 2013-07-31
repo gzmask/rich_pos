@@ -13,10 +13,10 @@
     (if (= password (:password user))
         {:body (pages (list [:div "登錄成功!"]))
          :headers {"Content-Type" "text/html; charset=utf-8"}
-         :session {assoc session :login true :user_id (:id user) :user_name (:account_name user) :user_role (:user_role user)}}
+         :session (assoc session :login true :user_id (:id user) :user_name (:account_name user) :user_role (:user_role user))}
         {:body (pages (list [:div "登錄失敗!"]))
          :headers {"Content-Type" "text/html; charset=utf-8"}
-         :session nil})))
+         :session (assoc session :login false)})))
 
 (defn login [session]
   (if (:login session)
