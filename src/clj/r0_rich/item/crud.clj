@@ -62,7 +62,8 @@
                (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
   (def_item "商品发票"
     (list [:div.row-fluid 
-           [:form.span6 {:novalidate "novalidate"}
+           [:form.span6 {:method "post" :action "/updateinvoice" :novalidate "novalidate"}
+            [:input {:name "item_id" :value (:id item) :type "hidden"}]
             [:div.row-fluid 
              [:label.span2.offset1 "数目:"] 
              [:input.span3 {:name "quantity" :type "number" :min "1" :max "10" :value "1"}]]

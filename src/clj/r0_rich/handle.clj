@@ -37,6 +37,7 @@
   (GET "/login" {session :session} (log/login session))
   (GET "/logout" {session :session} (log/logout session))
   (POST "/check" {params :params session :session} (log/check (:username params) (:password params) session))
+  (POST "/updateinvoice" {params :params session :session} (log/updateinvoice params session))
   (route/not-found no_pg))
 
 (def app
