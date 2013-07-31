@@ -68,11 +68,11 @@
           [:div.row-fluid [:div.span2 "PLU code: "]
            [:div.span5 (:plucode item)]]
           [:div.row-fluid [:div.span2 "Price: "]
-           [:div.span5 (:price item)]]
+           [:div.span5 "$" (:price item)]]
           [:div.row-fluid [:div.span2 "Cost: "]
-           [:div.span5 (:cost item)]]
+           [:div.span5 "$" (:cost item)]]
           [:div.row-fluid [:div.span2 "Profit: "]
-           [:div.span5 profit]]
+           [:div.span5 "$" (format "%.2f" profit)]]
           [:div.row-fluid [:div.span2 "Quantity: "]
            [:div.span5 (count items)]]
           [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
@@ -91,7 +91,7 @@
           (for [item items]
             [:div.row-fluid
                        [:a.span3 {:href (str "/items/"(:id item))} (:item_name item)]
-                       [:div.span1 (:price item)]
+                       [:div.span1 "$" (:price item)]
                        [:div.span1 (:quantity item)]
                        [:a.span2 {:href (str "/items/"(:id item)"/single_update")} "单个修改"]
                        [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "单个删除"]])))))
@@ -107,7 +107,7 @@
           [:div.row-fluid [:div.span2 "PLU code: "]
            [:div.span5 (:plucode item)]]
           [:div.row-fluid [:div.span2 "Price: "]
-           [:div.span5 (:price item)]]
+           [:div.span5 "$" (:price item)]]
           [:div.row-fluid [:div.span2 "Quantity: "]
            [:div.span5 (count items)]]))))
 
@@ -210,21 +210,23 @@
 
 (defn index [session]
   (let [items (j/with-connection SQLDB
-                (j/with-query-results rs ["select * from Item GROUP BY plucode"] (doall rs)))]
+                (j/with-query-results rs ["select * from Item GROUP BY plucode ORDER BY plucode"] (doall rs)))]
     (if (:login session)
        (pages (list [:a {:href "/items/new"} "添加商品"]
                     [:h2 "items"]
                     (for [item items]
                       [:div.row-fluid
+                       [:div.span1 (:plucode item)]
                        [:a.span3 {:href (str "/items/"(:id item))} (:item_name item)]
-                       [:div.span1 (:price item)]
+                       [:div.span1 "$" (:price item)]
                        [:div.span1 (:quantity item)]
                        [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改所有"]
                        [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有"]])))
        (pages (list [:h2 "items"]
                     (for [item items]
                       [:div.row-fluid
+                       [:div.span1 (:plucode item)]
                        [:a.span3 {:href (str "/items/"(:id item))} (:item_name item)]
-                       [:div.span1 (:price item)]
+                       [:div.span1 "$" (:price item)]
                        [:div.span1 (:quantity item)]]))))))
 
