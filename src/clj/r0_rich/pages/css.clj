@@ -13,6 +13,13 @@
             padding: 10px;
             background-color: rgba(0,0,0,0.8);
           }
+          div.hidenum {
+           opacity: 0.0;
+           transition: opacity 1s ease;
+          }
+          div.hidenum:hover {
+           opacity: 1.0;
+          }
           #qrcode {
             color: #000;
             background-color: #fff;

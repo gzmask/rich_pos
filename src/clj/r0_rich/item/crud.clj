@@ -54,29 +54,45 @@
   "compose page, convert title as id"
   (list [:h2.offset1 title]
         [:div.row-fluid {:id (str "pg_" (str/lower-case (str/replace title #"_|-|\s" "")))}
-          [:div.span10.offset2 body]]))
+          [:div.span12 body]]))
 
 (defn admin_item_pg [item items]
   (let [profit (- (:price item) (:cost item))
-        type (first (j/with-connection SQLDB
+        item_type (first (j/with-connection SQLDB
                (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
-  (def_item "商品信息"
-    (list [:div.row-fluid [:div.span2 "Item name: "]
-           [:div.span5 (:item_name item)]]
-          [:div.row-fluid [:div.span2 "Item type: "]
-           [:div.span5 (:type_name type)]]
-          [:div.row-fluid [:div.span2 "PLU code: "]
-           [:div.span5 (:plucode item)]]
-          [:div.row-fluid [:div.span2 "Price: "]
-           [:div.span5 "$" (:price item)]]
-          [:div.row-fluid [:div.span2 "Cost: "]
-           [:div.span5 "$" (:cost item)]]
-          [:div.row-fluid [:div.span2 "Profit: "]
-           [:div.span5 "$" (format "%.2f" profit)]]
-          [:div.row-fluid [:div.span2 "Quantity: "]
-           [:div.span5 (count items)]]
-          [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
-           [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]
+  (def_item "商品发票"
+    (list [:div.row-fluid 
+           [:form.span6 {:novalidate "novalidate"}
+            [:div.row-fluid 
+             [:label.span2.offset1 "数目:"] 
+             [:input.span3 {:name "quantity" :type "number" :min "1" :max "10" :value "1"}]]
+            [:div.row-fluid 
+             [:label.span2.offset1 "单价:"]
+             [:input.span3 {:name "price" :type "number" 
+                            :min "0"
+                            :max (+ (:price item) 0.001)
+                            :value (:price item)
+                            :step (/ (:price item) 10)}]]
+            [:div.row-fluid
+             [:input.span3.offset1 {:type "submit" :value "添加至发票"}]
+             [:input.span3 {:type "reset" :value "重置"}]]]
+           [:div.span6
+            [:div.row-fluid [:div.span2 "Item name: "] 
+             [:div.span5 (:item_name item)]]
+            [:div.row-fluid [:div.span2 "Item type: "]
+             [:div.span5 (:type_name item_type)]]
+            [:div.row-fluid [:div.span2 "PLU code: "]
+             [:div.span5 (:plucode item)]]
+            [:div.row-fluid [:div.span2 "Price: "]
+             [:div.span5 "$" (:price item)]]
+            [:div.row-fluid [:div.span2 "Cost: "]
+             [:div.span5.hidenum "$" (:cost item)]]
+            [:div.row-fluid [:div.span2 "Profit: "]
+             [:div.span5.hidenum "$" (format "%.2f" profit)]]
+            [:div.row-fluid [:div.span2 "Quantity: "]
+             [:div.span5 (count items)]]
+            [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
+             [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]]] 
           [:br]
           [:div.row-fluid 
            [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改所有同型商品"] 
@@ -97,13 +113,13 @@
                        [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "单个删除"]])))))
 
 (defn item_pg [item items]
-  (let [type (first (j/with-connection SQLDB
+  (let [item_type (first (j/with-connection SQLDB
                (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
   (def_item "商品信息"
     (list [:div.row-fluid [:div.span2 "Item name: "]
            [:div.span5 (:item_name item)]]
           [:div.row-fluid [:div.span2 "Item type: "]
-           [:div.span5 (:type_name type)]]
+           [:div.span5 (:type_name item_type)]]
           [:div.row-fluid [:div.span2 "PLU code: "]
            [:div.span5 (:plucode item)]]
           [:div.row-fluid [:div.span2 "Price: "]

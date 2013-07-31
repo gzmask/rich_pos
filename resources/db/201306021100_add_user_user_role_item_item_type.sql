@@ -20,7 +20,6 @@ cost float,
 user_id int
 );
 
-
 CREATE TABLE Item_type (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 type_name varchar(255)
@@ -33,8 +32,3 @@ insert into User_role (id, role_name) values (3, "customer");
 insert into User (id, account_name, password, user_role) values (1, "gzmask", "121212", 1);
 insert into User (id, account_name, password, user_role) values (2, "daisy", "123456", 2);
 insert into User (id, account_name, password, user_role) values (3, "tim", "123456", 2);
-
-insert into Item_type (type_name) values ("iphone case");
-
-insert into Item (item_name, price, cost) values ("iphone case 1", 15.00, 1.00);
-insert into Item (item_name, price, cost) values ("iphone case 2", 25.00, 1.00);

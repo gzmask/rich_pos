@@ -26,5 +26,5 @@
    [:body
     [:div.row-fluid.navigation_bar nav_bar]
     [:div.row-fluid.content [:h1.offset1 "長亨POS系統"]
-      [:div.offset1.row-fluid page]]]))
+      [:div.row-fluid page]]]))
 
