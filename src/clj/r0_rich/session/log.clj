@@ -6,8 +6,6 @@
     (:require [clojure.java.jdbc :as j]
               [clojure.java.jdbc.sql :as s]))
 
-;(def users (j/query SQLDB (s/select * :User (s/where {:account_name "gzmask"})) :row_fn :password))
-
 (defn check [username password session]
   (let [user (first (j/query SQLDB (s/select * :User (s/where {:account_name username}))))]
     (if (= password (:password user))
@@ -40,10 +38,15 @@
 
 (defn updateinvoice [params session]
   (if (:login session)
-      {:body (pages (list [:div "添加成功!"]))
+      {:body (pages (list [:div "添加成功!"] [:script {:type "text/javascript"} "window.location.replace('/invoices/new')"]))
        :headers {"Content-Type" "text/html; charset=utf-8"}
        :session (assoc session :invoice (assoc (:invoice session) 
                                                (keyword (:item_id params)) 
-                                               {:quantity (:quantity params) 
-                                                :price (:price params)}))}
+                                               {:quantity (if ((keyword (:item_id params)) (:invoice session))
+                                                            (+ (read-string (:quantity params))
+                                                               (:quantity ((keyword (:item_id params)) (:invoice session))))
+                                                            (read-string (:quantity params)))
+                                                :price (:price params)
+                                                :item_name (:item_name params)
+                                                }))}
       (pages [:div "你還沒登錄"])))

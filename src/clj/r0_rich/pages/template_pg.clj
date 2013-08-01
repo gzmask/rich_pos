@@ -10,9 +10,9 @@
                (list [:div.span2 [:a {:href (str (s/lower-case id))}[(keyword (str "i." icon)) name]]]))
              names ids icons)))
 
-(def nav_bar (def_nav ["開始" "商品" "种类" "登錄"] 
-                       ["/home" "/items" "/item_types" "/login"]
-                       ["icon-home" "icon-home" "icon-home" "icon-home"]))
+(def nav_bar (def_nav ["開始" "商品" "种类" "checkout" "登錄"] 
+                       ["/home" "/items" "/item_types" "/invoices/new" "/login"]
+                       ["icon-home" "icon-home" "icon-home" "icon-home" "icon-home"]))
 
 (defn pages [page]
   "get page by pagename"

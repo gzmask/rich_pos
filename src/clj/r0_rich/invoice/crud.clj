@@ -22,7 +22,8 @@
   (if (:login session)
     (pages (for [invoice (:invoice session)]
              [:div.row-fluid
-              [:div.span2 (:name (first invoice))]
+              [:div.span2 (first invoice)]
+              [:div.span2 (:item_name (second invoice))]
               [:div.span2 (:quantity (second invoice))]
               [:div.span2 (:price (second invoice))]]))
     (pages [:a {:href "/login"} "請登錄>>"])))

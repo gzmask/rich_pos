@@ -64,6 +64,7 @@
     (list [:div.row-fluid 
            [:form.span6 {:method "post" :action "/updateinvoice" :novalidate "novalidate"}
             [:input {:name "item_id" :value (:id item) :type "hidden"}]
+            [:input {:name "item_name" :value (:item_name item) :type "hidden"}]
             [:div.row-fluid 
              [:label.span2.offset1 "数目:"] 
              [:input.span3 {:name "quantity" :type "number" :min "1" :max "10" :value "1"}]]
