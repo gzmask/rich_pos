@@ -32,6 +32,9 @@
             font-family: advent-Re;
             font-size: 20px;
             color: #fff;}
+          :target {
+            background-color: #000;
+          }
           @font-face {
             font-family: advent-Re;
             src: url('fonts/advent-Re.otf');}

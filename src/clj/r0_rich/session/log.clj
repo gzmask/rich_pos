@@ -19,7 +19,7 @@
 (defn login [session]
   (if (:login session)
     (pages [:div "用户" (:user_name session) [:a {:href "/logout"} "登出"]])
-    (pages [:form.span10 {:action "/check" :method "post"}
+    (pages [:form.span10 {:action "/check#login" :method "post"}
      [:div.row-fluid
       [:label.span1.offset1 "User name:"]
       [:input#username.span3 {:name "username" :type "text"}]]
@@ -38,7 +38,7 @@
 
 (defn updateinvoice [params session]
   (if (:login session)
-      {:body (pages (list [:div "添加成功!"] [:script {:type "text/javascript"} "window.location.replace('/invoices/new')"]))
+      {:body (pages (list [:div "添加成功!"] [:script {:type "text/javascript"} "window.location.replace('/invoices/new#invoicesnew')"]))
        :headers {"Content-Type" "text/html; charset=utf-8"}
        :session (assoc session :invoice (assoc (:invoice session) 
                                                (keyword (:item_id params)) 
@@ -46,7 +46,7 @@
                                                             (+ (read-string (:quantity params))
                                                                (:quantity ((keyword (:item_id params)) (:invoice session))))
                                                             (read-string (:quantity params)))
-                                                :price (:price params)
+                                                :price (read-string (:price params))
                                                 :item_name (:item_name params)
                                                 }))}
       (pages [:div "你還沒登錄"])))

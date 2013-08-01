@@ -7,33 +7,56 @@
               [clojure.java.jdbc :as j]))
 
 (defn index [session]
-  (let [item_types (j/with-connection SQLDB
-                (j/with-query-results rs ["select * from Item_type"] (doall rs)))]
+  (let [invoices (j/with-connection SQLDB 
+                   (j/with-query-results rs ["select * from Invoice"] (doall rs)))]
     (if (:login session)
-       (pages (list [:a {:href "/item_types/new"} "添加商品类型"]
-                    [:h2 "item_types"]
-                    (for [item_type item_types]
-                      [:div.row-fluid [:a.span6 {:href (str "/item_types/"(:id item_type))} (:type_name item_type)]])))
-       (pages (list [:h2 "item_types"]
-                    (for [item_type item_types]
-                      [:div.row-fluid [:a.span6 {:href (str "/item_types/"(:id item_type))} (:type_name item_type)]]))))))
+       (pages (list [:h2 "invoices"]
+                    (for [invoice invoices]
+                      [:div.row-fluid 
+                       [:a.span1 {:href (str "/invoices/"(:id invoice))} (:id invoice)]
+                       [:div.span2 (:timestamp invoice)]
+                       [:div.span2 "$" (:total invoice)]
+                       ])))
+       (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn new [session]
-  (if (:login session)
-    (pages (for [invoice (:invoice session)]
-             [:div.row-fluid
-              [:div.span2 (first invoice)]
-              [:div.span2 (:item_name (second invoice))]
-              [:div.span2 (:quantity (second invoice))]
-              [:div.span2 (:price (second invoice))]]))
-    (pages [:a {:href "/login"} "請登錄>>"])))
+  (if (and (:login session) (:invoice session))
+    (pages [:form {:method "post" :action "/invoices/create" :novalidate "novalidate"}
+            [:div.row-fluid 
+             [:input.span1 {:value "item id" :type "text" :readonly "readonly"}]
+             [:input.span2 {:value "item name" :type "text" :readonly "readonly"}]
+             [:input.span1 {:value "quantity" :type "text" :readonly "readonly"}]
+             [:input.span1 {:value "price" :type "text" :readonly "readonly"}]]
+           (for [invoice (:invoice session)] 
+             [:div.row-fluid 
+               [:input.span1 {:name (str "items["(name (first invoice))"][item_id]") :type "text" :readonly "readonly" :value (first invoice)}]
+               [:input.span2 {:name (str "items["(name (first invoice))"][item_name]") :type "text" :readonly "readonly" :value (:item_name (second invoice))}]
+               [:input.span1 {:name (str "items["(name (first invoice))"][quantity]") :type "number" :min 1 :max 10 :value (:quantity (second invoice))}]
+               [:input.span1 {:name (str "items["(name (first invoice))"][price]") 
+                              :type "number" :min 0 
+                              :step (/ (:price (second invoice)) 10) 
+                              :max (+ (:price (second invoice)) 0.001) 
+                              :value (:price (second invoice))}]])
+           [:div.row-fluid 
+             [:input.span1.offset2 {:value "总数:" :type "text" :readonly "readonly"}] 
+             [:input.span1 {:type "number" :readonly "readonly" :name "total"
+                            :value 
+                            (format "%.2f" (reduce + (for [invoice (:invoice session)] 
+                                     (* (:price (second invoice))
+                                        (:quantity (second invoice))))))}]]
+           [:div.row-fluid 
+             [:input.span2.offset1 {:type "submit" :value "结帐"}]
+             [:input.span2 {:type "reset" :value "重置"}]]])
+    (pages [:a {:href "/items"} "請先登錄并选择商品"])))
 
 
 (defn create [params session]
   (if (:login session)
-    (do (j/insert! SQLDB :Item_type
-            {:type_name (:type_name params)})
-        (pages [:div "添加成功."]))
+    (do (j/insert! SQLDB :Invoice
+            {:timestamp (System/currentTimeMillis)
+             :total (:total params)
+             :refund false})
+        (pages [:div (seq (:items params))]))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn admin_item_type_pg [item_type]

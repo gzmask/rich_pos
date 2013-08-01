@@ -67,16 +67,16 @@
             [:input {:name "item_name" :value (:item_name item) :type "hidden"}]
             [:div.row-fluid 
              [:label.span2.offset1 "数目:"] 
-             [:input.span3 {:name "quantity" :type "number" :min "1" :max "10" :value "1"}]]
+             [:input.span3 {:name "quantity" :type "number" :min 1 :max 10 :value 1}]]
             [:div.row-fluid 
              [:label.span2.offset1 "单价:"]
              [:input.span3 {:name "price" :type "number" 
-                            :min "0"
+                            :min 0
                             :max (+ (:price item) 0.001)
                             :value (:price item)
                             :step (/ (:price item) 10)}]]
             [:div.row-fluid
-             [:input.span3.offset1 {:type "submit" :value "添加至发票"}]
+             [:input.span3.offset1 {:type "submit" :value "添加至帐单"}]
              [:input.span3 {:type "reset" :value "重置"}]]]
            [:div.span6
             [:div.row-fluid [:div.span2 "Item name: "] 

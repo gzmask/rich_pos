@@ -7,12 +7,12 @@
 (defn def_nav [names ids icons]
   (list [:div.span1 ""] 
         (map (fn [name id icon] 
-               (list [:div.span2 [:a {:href (str (s/lower-case id))}[(keyword (str "i." icon)) name]]]))
+               (list [:div.span1 {:id (s/replace id #"_|-|\/|\s" "")}[:a {:href (str (s/lower-case id) "#" (s/replace id #"_|-|\/|\s" ""))}[:i {:class icon} name]]]))
              names ids icons)))
 
-(def nav_bar (def_nav ["開始" "商品" "种类" "checkout" "登錄"] 
-                       ["/home" "/items" "/item_types" "/invoices/new" "/login"]
-                       ["icon-home" "icon-home" "icon-home" "icon-home" "icon-home"]))
+(def nav_bar (def_nav ["開始" "商品" "种类" "历史" "结帐" "登錄"] 
+                       ["/home" "/items" "/item_types" "/invoices" "/invoices/new" "/login"]
+                       ["icon-home" "icon-home" "icon-home" "icon-home" "icon-home" "icon-home"]))
 
 (defn pages [page]
   "get page by pagename"
