@@ -9,6 +9,7 @@
               [ring.middleware.params :as params]
               [r0_rich.item.crud :as item]
               [r0_rich.item_type.crud :as item_type]
+              [r0_rich.invoice.crud :as invoice]
               [r0_rich.session.log :as log]
               [compojure.route :as route]))
 
@@ -27,6 +28,8 @@
   (POST "/items/:id/change" {params :params session :session} (item/change params session))
   (GET "/items/:id/single_remove" {{id :id} :params session :session} (item/single_remove id session))
   (GET "/items/:plucode/remove" {{plucode :plucode} :params session :session} (item/plu_remove plucode session))
+  (GET "/invoices" {session :session} (invoice/index session))
+  (GET "/invoices/new" {session :session} (invoice/new session))
   (GET "/item_types" {session :session} (item_type/index session))
   (GET "/item_types/new" {session :session} (item_type/new session))
   (POST "/item_types/create" {params :params session :session} (item_type/create params session))

@@ -43,7 +43,7 @@
       {:body (pages (list [:div "添加成功!"]))
        :headers {"Content-Type" "text/html; charset=utf-8"}
        :session (assoc session :invoice (assoc (:invoice session) 
-                                          :item_id (:item_id params) 
-                                          :quantity (:quantity params) 
-                                          :price (:price params)))}
+                                               (keyword (:item_id params)) 
+                                               {:quantity (:quantity params) 
+                                                :price (:price params)}))}
       (pages [:div "你還沒登錄"])))
