@@ -42,7 +42,7 @@
              [:input.span1 {:type "number" :readonly "readonly" :name "total"
                             :value 
                             (format "%.2f" (reduce + (for [invoice (:invoice session)] 
-                                                       (:price (second invoice)))))}]]
+                                                       (double (:price (second invoice))))))}]]
            [:div.row-fluid 
              [:input.span2.offset1 {:type "submit" :value "结帐"}]
              [:input.span2 {:type "reset" :value "重置"}]]])
@@ -55,19 +55,33 @@
       (let [invoice (j/insert! SQLDB :Invoice 
                                {:timestamp (System/currentTimeMillis) 
                                 :total (:total params) 
-                                :refund false})] 
+                                :refund false})
+            invoice_id ((keyword "last_insert_rowid()") (first invoice))] 
         (doseq [item (:items params)] 
           (let [origin_item (first (j/with-connection SQLDB 
-                                     (j/with-query-results rs [(str "select * from Item where id = '" (:id item) "';")] (doall rs))))] 
-            (j/insert! SQLDB :Item_sold {:item_name (:item_name origin_item)
-                                         :item_type (:item_type origin_item)
-                                         :plucode (:plucode origin_item)
-                                         :price (:price origin_item)
-                                         :cost (:cost origin_item)
-                                         :user_id (:user_id origin_item)
-                                         :invoice_id (:id invoice)}) 
-            (j/delete! SQLDB :Item (s/where {:id (:item_id item)})))) 
-        (pages [:a {:href (str "/invoices/" (:id invoice))} "checkout done!"])))
+                                     (j/with-query-results rs [(str "select * from Item where id = '" (:item_id (second item)) "';")] (doall rs)))) 
+                sold_items (j/insert! SQLDB :Item_sold {:item_name (:item_name origin_item)
+                                           :item_type (:item_type origin_item)
+                                           :plucode (:plucode origin_item)
+                                           :price (:price (second item))
+                                           :cost (:cost origin_item)
+                                           :user_id (:user_id origin_item)
+                                           :invoice_id invoice_id}) 
+                removed_items (j/delete! SQLDB :Item (s/where {:id (:id origin_item)}))])) 
+        (let [sold_items (j/with-connection SQLDB 
+                           (j/with-query-results rs [(str "select * from Item_sold where invoice_id = '" invoice_id "';")] (doall rs)))]
+          {:body (pages 
+                   (list 
+                     [:h2 "以下商品成功结帐:"] 
+                     (for [sold_item sold_items]
+                       [:div.row-fluid
+                        [:div.span1 "ID:" (:id sold_item)]
+                        [:div.span1 "PLUcode:" (:plucode sold_item)]
+                        [:div.span3 (:item_name sold_item)]
+                        [:div.span1 "$" (:price sold_item)]]) 
+                     [:a {:href (str "/invoices/" invoice_id)} "打印小票"]))
+         :headers {"Content-Type" "text/html; charset=utf-8"}
+         :session (dissoc session :invoice)})))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn admin_item_type_pg [item_type]
