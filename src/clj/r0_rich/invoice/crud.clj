@@ -14,8 +14,8 @@
                     (for [invoice invoices]
                       [:div.row-fluid 
                        [:a.span1 {:href (str "/invoices/"(:id invoice))} (:id invoice)]
-                       [:div.span2 (:timestamp invoice)]
-                       [:div.span2 "$" (:total invoice)]
+                       [:div.span3 "时间戳:" (:timestamp invoice)]
+                       [:div.span1 "$" (:total invoice)]
                        ])))
        (pages [:a {:href "/login"} "請登錄>>"]))))
 
@@ -24,14 +24,14 @@
     (pages [:form {:method "post" :action "/invoices/create" :novalidate "novalidate"}
             [:div.row-fluid 
              [:input.span1 {:value "item id" :type "text" :readonly "readonly"}]
+             [:input.span1 {:value "plucode" :type "text" :readonly "readonly"}]
              [:input.span2 {:value "item name" :type "text" :readonly "readonly"}]
-             [:input.span1 {:value "quantity" :type "text" :readonly "readonly"}]
              [:input.span1 {:value "price" :type "text" :readonly "readonly"}]]
            (for [invoice (:invoice session)] 
              [:div.row-fluid 
                [:input.span1 {:name (str "items["(name (first invoice))"][item_id]") :type "text" :readonly "readonly" :value (first invoice)}]
+               [:input.span1 {:name (str "items["(name (first invoice))"][plucode]") :type "text" :readonly "readonly" :value (:plucode (second invoice))}]
                [:input.span2 {:name (str "items["(name (first invoice))"][item_name]") :type "text" :readonly "readonly" :value (:item_name (second invoice))}]
-               [:input.span1 {:name (str "items["(name (first invoice))"][quantity]") :type "number" :min 1 :max 10 :value (:quantity (second invoice))}]
                [:input.span1 {:name (str "items["(name (first invoice))"][price]") 
                               :type "number" :min 0 
                               :step (/ (:price (second invoice)) 10) 
@@ -42,21 +42,32 @@
              [:input.span1 {:type "number" :readonly "readonly" :name "total"
                             :value 
                             (format "%.2f" (reduce + (for [invoice (:invoice session)] 
-                                     (* (:price (second invoice))
-                                        (:quantity (second invoice))))))}]]
+                                                       (:price (second invoice)))))}]]
            [:div.row-fluid 
              [:input.span2.offset1 {:type "submit" :value "结帐"}]
              [:input.span2 {:type "reset" :value "重置"}]]])
-    (pages [:a {:href "/items"} "請先登錄并选择商品"])))
+    (pages [:a {:href "/items"} "請先登錄或选择商品"])))
 
 
 (defn create [params session]
   (if (:login session)
-    (do (j/insert! SQLDB :Invoice
-            {:timestamp (System/currentTimeMillis)
-             :total (:total params)
-             :refund false})
-        (pages [:div (seq (:items params))]))
+    (do 
+      (let [invoice (j/insert! SQLDB :Invoice 
+                               {:timestamp (System/currentTimeMillis) 
+                                :total (:total params) 
+                                :refund false})] 
+        (doseq [item (:items params)] 
+          (let [origin_item (first (j/with-connection SQLDB 
+                                     (j/with-query-results rs [(str "select * from Item where id = '" (:id item) "';")] (doall rs))))] 
+            (j/insert! SQLDB :Item_sold {:item_name (:item_name origin_item)
+                                         :item_type (:item_type origin_item)
+                                         :plucode (:plucode origin_item)
+                                         :price (:price origin_item)
+                                         :cost (:cost origin_item)
+                                         :user_id (:user_id origin_item)
+                                         :invoice_id (:id invoice)}) 
+            (j/delete! SQLDB :Item (s/where {:id (:item_id item)})))) 
+        (pages [:a {:href (str "/invoices/" (:id invoice))} "checkout done!"])))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn admin_item_type_pg [item_type]

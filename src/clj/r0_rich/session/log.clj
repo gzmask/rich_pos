@@ -40,13 +40,18 @@
   (if (:login session)
       {:body (pages (list [:div "添加成功!"] [:script {:type "text/javascript"} "window.location.replace('/invoices/new#invoicesnew')"]))
        :headers {"Content-Type" "text/html; charset=utf-8"}
-       :session (assoc session :invoice (assoc (:invoice session) 
-                                               (keyword (:item_id params)) 
-                                               {:quantity (if ((keyword (:item_id params)) (:invoice session))
-                                                            (+ (read-string (:quantity params))
-                                                               (:quantity ((keyword (:item_id params)) (:invoice session))))
-                                                            (read-string (:quantity params)))
-                                                :price (read-string (:price params))
+       :session (assoc session :invoice (merge (:invoice session) 
+                                          (let [allitems (j/query SQLDB (s/select * :Item (s/where {:plucode (:plucode params)})))
+                                                items (take (dec (read-string (:quantity params))) allitems)]
+                                            (reduce  
+                                              (fn [first second] (merge first second)) 
+                                              {(keyword (str (:item_id params)))
+                                               {:price (read-string (:price params))
                                                 :item_name (:item_name params)
-                                                }))}
+                                                :plucode (:plucode params)}}
+                                              (for [item items]
+                                                {(keyword (str (:id item)))
+                                                 {:price (:price item)
+                                                  :item_name (:item_name item)
+                                                  :plucode (:plucode item)}})))))}
       (pages [:div "你還沒登錄"])))

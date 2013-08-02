@@ -65,9 +65,10 @@
            [:form.span6 {:method "post" :action "/updateinvoice" :novalidate "novalidate"}
             [:input {:name "item_id" :value (:id item) :type "hidden"}]
             [:input {:name "item_name" :value (:item_name item) :type "hidden"}]
+            [:input {:name "plucode" :value (:plucode item) :type "hidden"}]
             [:div.row-fluid 
-             [:label.span2.offset1 "数目:"] 
-             [:input.span3 {:name "quantity" :type "number" :min 1 :max 10 :value 1}]]
+             [:label.span2.offset1 "数目(同型随选):"] 
+             [:input.span3 {:name "quantity" :type "number" :min 1 :max (count items) :value 1}]]
             [:div.row-fluid 
              [:label.span2.offset1 "单价:"]
              [:input.span3 {:name "price" :type "number" 
