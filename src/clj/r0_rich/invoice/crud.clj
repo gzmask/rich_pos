@@ -84,40 +84,46 @@
          :session (dissoc session :invoice)})))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
-(defn admin_item_type_pg [item_type]
-  (let [items (j/with-connection SQLDB
-               (j/with-query-results rs [(str "select * from Item where item_type = '" (:id item_type) "' GROUP BY plucode;")] (doall rs)))]
-  (list [:h2.offset1 "商品种类"] 
-        [:div.row-fluid [:div.span2 "Type name: "] 
-         [:div.span3 (:type_name item_type)]
-         [:div.span2 [:a {:href (str "/item_types/" (:id item_type) "/update")} "修改"]]
-         [:div.span2 [:a {:href (str "/item_types/" (:id item_type) "/remove")} "删除"]]]
-        [:h2 "该类商品列表"]
-        (for [item items]
+(defn admin_invoice_pg [invoice]
+  (let [sold_items (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_sold where invoice_id = '" (:id invoice) "';")] (doall rs)))]
+  (list [:h2.offset1 "invoice"] 
+        [:div.row-fluid 
+         [:div.span2 "invoice timestamp: "] 
+         [:div.span3 (:timestamp invoice)]
+         [:div.span2 [:a {:href (str "/invoices/" (:id invoice) "/update")} "修改"]]
+         [:div.span2 [:a {:href (str "/invoices/" (:id invoice) "/remove")} "删除"]]]
+        [:h2 "sold items"]
+        (for [item sold_items]
           [:div.row-fluid 
            [:a.span3 {:href (str "/items/" (:id item))} (:item_name item)] 
            [:a.span2 {:href (str "/items/" (:id item) "/update")} "同型号修改"] 
            [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有同型商品"]
            [:div.span2 "$" (:price item)]]))))
 
-(defn item_type_pg [item_type]
-  (let [items (j/with-connection SQLDB
-               (j/with-query-results rs [(str "select * from Item where item_type = '" (:id item_type) "' GROUP BY plucode;")] (doall rs)))]
-  (list [:h2.offset1 "商品种类"] 
-        [:div.row-fluid [:div.span2 "Type name: "] 
-         [:div.span3 (:type_name item_type)]]
-        [:h2 "该类商品列表"]
-        (for [item items]
+(defn invoice_pg [invoice]
+  (let [sold_items (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Item_sold where invoice_id = '" (:id invoice) "';")] (doall rs)))]
+  (list [:h2.offset1 "invoice"] 
+        [:div.row-fluid 
+         [:div.span2 "invoice timestamp: "] 
+         [:div.span3 (:timestamp invoice)]
+         [:div.span2 [:a {:href (str "/invoices/" (:id invoice) "/update")} "修改"]]
+         [:div.span2 [:a {:href (str "/invoices/" (:id invoice) "/remove")} "删除"]]]
+        [:h2 "sold items"]
+        (for [item sold_items]
           [:div.row-fluid 
            [:a.span3 {:href (str "/items/" (:id item))} (:item_name item)] 
+           [:a.span2 {:href (str "/items/" (:id item) "/update")} "同型号修改"] 
+           [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有同型商品"]
            [:div.span2 "$" (:price item)]]))))
 
 (defn show [id session]
-  (let [item_type (first (j/with-connection SQLDB
-               (j/with-query-results rs [(str "select * from Item_type where id = '" id "';")] (doall rs))))]
+  (let [invoice (first (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Invoice where id = '" id "';")] (doall rs))))]
     (if (:login session) 
-      (pages (admin_item_type_pg item_type))
-      (pages (item_type_pg item_type)))))
+      (pages (admin_invoice_pg invoice))
+      (pages (invoice_pg invoice)))))
 
 (defn update [id session]
   (let [item_type (first (j/with-connection SQLDB 
