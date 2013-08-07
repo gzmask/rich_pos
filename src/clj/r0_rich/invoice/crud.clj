@@ -147,14 +147,19 @@
             [:lable.span2.offset1 "时间戳:"]
             [:input.span3 {:name "timestamp" :type "text" :value (:timestamp invoice)}]]
            [:div.row-fluid
-            [:h3 "已售商品:"]
+            [:h3 "已售商品:"] 
+            [:div.row-fluid 
+             [:input.span1 {:readonly "readonly" :type "text" :value "id"}] 
+             [:input.span1 {:readonly "readonly" :type "text" :value "PLUcode"}] 
+             [:input.span1 {:readonly "readonly" :type "text" :value "Name"}] 
+             [:input.span1 {:readonly "readonly" :type "text" :value "Price"}]]
             (for [item sold_items]
               [:div.row-fluid
                 [:input.span1 {:name (str "items["(:id item)"][id]") :readonly "readonly" :type "text" :value (:id item)}]
                 [:input.span1 {:name (str "items["(:id item)"][plucode]") :readonly "readonly" :type "text" :value (:plucode item)}]
                 [:input.span1 {:name (str "items["(:id item)"][item_name]") :readonly "readonly" :type "text" :value (:item_name item)}]
                 [:input.span1 {:name (str "items["(:id item)"][price]") :readonly "readonly" :type "text" :value (:price item)}]
-                [:input.span1 {:name (str "items["(:id item)"][cost]") :readonly "readonly" :type "text" :value (:cost item)}]
+                [:input.span1 {:name (str "items["(:id item)"][cost]") :readonly "readonly" :type "hidden" :value (:cost item)}]
                 [:input {:name (str "items["(:id item)"][user_id]") :readonly "readonly" :type "hidden" :value (:user_id item)}]
                 [:input {:name (str "items["(:id item)"][invoice_id]") :readonly "readonly" :type "hidden" :value (:id invoice)}]
                 [:input.span1 {:name (str "items["(:id item)"][refund]") :type "radio" :value 1 :checked (if (== 1 (:refund item)) "checked")} "退货"]
@@ -176,6 +181,10 @@
 
 (defn aremove [id session]
   (if (:login session)
-    (do (j/delete! SQLDB :Invoice (s/where {:id id}))
-        (pages [:div (str id "号invoice删除成功.")]))
+    (let [sold_items (j/with-connection SQLDB 
+                     (j/with-query-results rs [(str "select * from Item_sold where invoice_id = '" id "';")] (doall rs)))] 
+      (do (j/delete! SQLDB :Invoice (s/where {:id id})) 
+          (doseq [item sold_items] 
+            (j/delete! SQLDB :Item_sold (s/where {:id (:id item)})))
+          (pages [:div (str id "号invoice删除成功.")])))
     (pages [:a {:href "/login"} "請登錄>>"])))

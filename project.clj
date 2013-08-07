@@ -19,8 +19,13 @@
   :main r0_rich.handle
   :profiles {:dev {:dependencies [[ring-server "0.2.8"]
                                   [ring-mock "0.1.3"]]}}
-  :cljsbuild{:builds [{:source-paths ["src/cljs"]
+  :cljsbuild{:builds [{:source-paths ["src/qr_cljs"]
                        :compiler {:output-to "resources/public/qr.js"
-                                  :externs ["src/cljs/r0_rich/externs.js"]
+                                  :externs ["src/qr_cljs/r0_rich/externs.js"]
+                                  :optimizations :advanced
+                                  :pretty-print true}}
+                      {:source-paths ["src/invoice_new_cljs"]
+                       :compiler {:output-to "resources/public/invoice_new.js"
+                                  :externs ["src/invoice_new_cljs/r0_rich/externs.js"]
                                   :optimizations :advanced
                                   :pretty-print true}}]})
