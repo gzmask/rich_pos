@@ -1,9 +1,18 @@
-(ns r0_rich.invoice_new)
+(ns r0_rich.invoice_new
+  (:require [enfocus.core :as ef]
+            [enfocus.events :as event]
+            [enfocus.effects :as effect]
+            [cljs.reader :as reader])
+  (:require-macros [enfocus.macros :as em]))
 
-(defn makeCode []
-  (let [server_qr_str (.-value (.getElementById js/document "qr_str"))
-        client_qr_str (.-URL js/document)
-        qrcode (js/QRCode. (.getElementById js/document "qrcode") (js-obj "width" 250 "height" 250))]
-    (.makeCode qrcode client_qr_str)))
+(defn change_total [doms] 
+  (let [total (reduce + (for [dom doms] (reader/read-string (ef/from dom (ef/get-prop :value)))))
+        ] 
+    (ef/at ["#price_total"] 
+           (ef/set-prop :value total))))
 
-(makeCode)
+(let [price_doms (.getElementsByClassName js/document "price_change")] 
+  (doseq [price_dom price_doms] 
+    (ef/at price_dom 
+           (event/listen :change 
+                         #(change_total price_doms)))))

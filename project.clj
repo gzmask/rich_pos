@@ -12,7 +12,8 @@
                  [compojure "1.1.5"]
                  [org.xerial/sqlite-jdbc "3.7.2"]
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
-                 [org.clojure/clojure "1.5.1"]]
+                 [org.clojure/clojure "1.5.1"]
+                 [enfocus "2.0.0-SNAPSHOT"]]
   :source-paths ["src/clj"]
   :ring {:handler r0_rich.handle/app
          :auto-relod? true}

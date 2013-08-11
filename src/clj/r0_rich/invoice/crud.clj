@@ -22,8 +22,10 @@
 
 (defn new [session]
   (if (and (:login session) (:invoice session))
-    (pages [:form {:method "post" :action "/invoices/create" :novalidate "novalidate"}
-            [:div.row-fluid 
+    (pages 
+      (list 
+        [:form {:method "post" :action "/invoices/create" :novalidate "novalidate"}
+           [:div.row-fluid 
              [:input.span1 {:value "item id" :type "text" :readonly "readonly"}]
              [:input.span1 {:value "plucode" :type "text" :readonly "readonly"}]
              [:input.span2 {:value "item name" :type "text" :readonly "readonly"}]
@@ -33,7 +35,7 @@
                [:input.span1 {:name (str "items["(name (first invoice))"][item_id]") :type "text" :readonly "readonly" :value (first invoice)}]
                [:input.span1 {:name (str "items["(name (first invoice))"][plucode]") :type "text" :readonly "readonly" :value (:plucode (second invoice))}]
                [:input.span2 {:name (str "items["(name (first invoice))"][item_name]") :type "text" :readonly "readonly" :value (:item_name (second invoice))}]
-               [:input.span1 {:name (str "items["(name (first invoice))"][price]") 
+               [:input.span1.price_change {:name (str "items["(name (first invoice))"][price]") 
                               :type "number" :min 0 
                               :step (/ (:price (second invoice)) 10) 
                               :max (+ (:price (second invoice)) 0.001) 
@@ -41,12 +43,14 @@
            [:div.row-fluid 
              [:input.span1.offset2 {:value "总数:" :type "text" :readonly "readonly"}] 
              [:input.span1 {:type "number" :readonly "readonly" :name "total"
+                            :id "price_total"
                             :value 
                             (format "%.2f" (reduce + (for [invoice (:invoice session)] 
                                                        (double (:price (second invoice))))))}]]
            [:div.row-fluid 
              [:input.span2.offset1 {:type "submit" :value "结帐"}]
-             [:input.span2 {:type "reset" :value "重置"}]]])
+             [:input.span2 {:type "reset" :value "重置"}]]]
+        [:script {:src "/invoice_new.js"}]))
     (pages [:a {:href "/items"} "請先登錄或选择商品"])))
 
 
