@@ -1,4 +1,4 @@
-(defproject r0-rich "0.1.0-SNAPSHOT"
+(defproject rich_pos "0.1.0-SNAPSHOT"
   :description "POS"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -17,9 +17,7 @@
   :source-paths ["src/clj"]
   :ring {:handler r0_rich.handle/app
          :auto-relod? true}
-  :main r0_rich.handle
-  :profiles {:dev {:dependencies [[ring-server "0.2.8"]
-                                  [ring-mock "0.1.3"]]}}
+  :main r0_rich.handle 
   :cljsbuild{:builds [{:source-paths ["src/qr_cljs"]
                        :compiler {:output-to "resources/public/qr.js"
                                   :externs ["src/qr_cljs/r0_rich/externs.js"]
@@ -29,4 +27,5 @@
                        :compiler {:output-to "resources/public/invoice_new.js"
                                   :externs ["src/invoice_new_cljs/r0_rich/externs.js"]
                                   :optimizations :advanced
-                                  :pretty-print true}}]})
+                                  :pretty-print true}
+                       :jar true}]})
