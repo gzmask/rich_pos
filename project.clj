@@ -18,6 +18,7 @@
   :ring {:handler r0_rich.handle/app
          :auto-relod? true}
   :main r0_rich.handle 
+  :profiles {:uberjar {:aot [r0_rich.handle]}}
   :cljsbuild{:builds [{:source-paths ["src/qr_cljs"]
                        :compiler {:output-to "resources/public/qr.js"
                                   :externs ["src/qr_cljs/r0_rich/externs.js"]
