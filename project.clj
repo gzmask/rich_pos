@@ -1,6 +1,6 @@
-(defproject rich_pos "0.1.0-SNAPSHOT"
+(defproject org.clojars.gzmask/rich_pos "0.1.0-SNAPSHOT"
   :description "POS"
-  :url "http://example.com/FIXME"
+  :url "http://richever.ca"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[lein-cljsbuild "0.3.2"]
