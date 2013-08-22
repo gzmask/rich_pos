@@ -1,4 +1,4 @@
-(defproject org.clojars.gzmask/rich_pos "0.1.0-SNAPSHOT"
+(defproject org.clojars.gzmask/rich_pos "0.1.1"
   :description "POS"
   :url "http://richever.ca"
   :license {:name "Eclipse Public License"

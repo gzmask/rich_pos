@@ -22,7 +22,7 @@
     (include-css "/vendor/bootstrap/css/bootstrap.min.css")
     (include-css "/vendor/bootstrap/css/bootstrap-responsive.css")
     (include-css "/vendor/font-awesome/css/font-awesome.min.css")
-    (include-css "/style.css")]
+    (include-css "/pos_bg_style.css")]
    [:body
     [:div.row-fluid.navigation_bar nav_bar]
     [:div.row-fluid.content [:h1.offset1 "長亨POS系統"]

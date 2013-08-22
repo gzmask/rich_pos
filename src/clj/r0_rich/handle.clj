@@ -16,7 +16,7 @@
 
 (defroutes app-routes
   (route/resources "/")
-  (GET "/style.css" [] (css))
+  (GET "/pos_bg_style.css" [] (css))
   (GET "/" [] home_pg)
   (GET "/home" [] home_pg)
   (GET "/items" {session :session} (item/index session))
