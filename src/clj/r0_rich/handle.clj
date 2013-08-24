@@ -11,6 +11,7 @@
             [r0_rich.item.crud :as item]
             [r0_rich.item_type.crud :as item_type]
             [r0_rich.invoice.crud :as invoice]
+            [r0_rich.tax.crud :as tax]
             [r0_rich.session.log :as log]
             [compojure.route :as route]))
 
@@ -43,6 +44,13 @@
   (GET "/item_types/:id/update" {{id :id} :params session :session} (item_type/update id session))
   (POST "/item_types/:id/change" {params :params session :session} (item_type/change params session))
   (GET "/item_types/:id/remove" {{id :id} :params session :session} (item_type/aremove id session))
+  (GET "/taxs" {session :session} (tax/index session))
+  (GET "/taxs/new" {session :session} (tax/new session))
+  (POST "/taxs/create" {params :params session :session} (tax/create params session))
+  (GET "/taxs/:id" {params :params session :session} (tax/show (:id params) session))
+  (GET "/taxs/:id/update" {{id :id} :params session :session} (tax/update id session))
+  (POST "/taxs/:id/change" {params :params session :session} (tax/change params session))
+
   (GET "/login" {session :session} (log/login session))
   (GET "/logout" {session :session} (log/logout session))
   (POST "/check" {params :params session :session} (log/check (:username params) (:password params) session))

@@ -10,9 +10,9 @@
                (list [:div.span1 {:id (s/replace id #"_|-|\/|\s" "")}[:a {:href (str (s/lower-case id) "#" (s/replace id #"_|-|\/|\s" ""))}[:i {:class icon} name]]]))
              names ids icons)))
 
-(def nav_bar (def_nav ["開始" "商品" "种类" "历史" "结帐" "会员"] 
-                       ["/home" "/items" "/item_types" "/invoices" "/invoices/new" "/login"]
-                       ["icon-home" "icon-home" "icon-home" "icon-home" "icon-home" "icon-home"]))
+(def nav_bar (def_nav ["開始" "商品" "种类" "税种" "历史" "结帐" "会员"] 
+                       ["/home" "/items" "/item_types" "/taxs"  "/invoices" "/invoices/new" "/login"]
+                       ["icon-home" "icon-home" "icon-home" "icon-home" "icon-home" "icon-home" "icon-home"]))
 
 (defn pages [page]
   "get page by pagename"

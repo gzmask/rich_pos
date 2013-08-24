@@ -7,3 +7,5 @@ timestamp INTEGER
 
 ALTER TABLE Invoice
 ADD tax INTEGER;
+
+update Version set timestamp="201308221732";
