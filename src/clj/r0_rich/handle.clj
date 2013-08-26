@@ -8,6 +8,7 @@
   (:require [compojure.handler :as handler]
             [ring.middleware.session :as session]
             [ring.middleware.params :as params]
+            [ring.middleware.multipart-params :as mulparams]
             [r0_rich.item.crud :as item]
             [r0_rich.item_type.crud :as item_type]
             [r0_rich.invoice.crud :as invoice]
@@ -58,7 +59,7 @@
   (route/not-found no_pg))
 
 (def app
-  (params/wrap-params (session/wrap-session (handler/site app-routes))))
+  (mulparams/wrap-multipart-params (params/wrap-params (session/wrap-session (handler/site app-routes)))))
 
 (defn -main []
     (run-jetty #'app {:port 3000 :join? false}))

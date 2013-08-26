@@ -5,13 +5,14 @@
           hiccup.page)
     (:require [clojure.java.jdbc :as j]
               [clojure.java.jdbc.sql :as sql]
+              [clojure.java.io :as io]
               [clojure.string :as str]))
 
 (defn new [session]
   (let [types (j/with-connection SQLDB
                (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
   (if (:login session)
-    (pages [:form.span10 {:action "/items/create" :method "post"}
+    (pages [:form.span10 {:action "/items/create" :method "post" :enctype "multipart/form-data"}
            [:div.row-fluid
             [:lable.span2.offset1 "商品名称:"]
             [:input.span3 {:name "item_name" :type "text"}]]
@@ -31,8 +32,11 @@
             [:input.span3 {:name "cost" :type "text"}]]
            [:div.row-fluid
             [:lable.span2.offset1 "库存:"]
-            [:input.span3 {:name "quantity" :type "text"}]]
-            [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
+            [:input.span3 {:name "quantity" :type "text"}]] 
+           [:div.row-fluid
+            [:lable.span2.offset1 "图片:"]
+            [:input.span3 {:name "picture" :type "file" :size "20"}]]
+           [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
            [:div.row-fluid
             [:input.span1.offset1 {:type "submit" :value "添加"}]]])
     (pages [:a {:href "/login"} "請登錄>>"]))))
@@ -46,6 +50,7 @@
              :plucode (:plucode params)
              :price (:price params)
              :cost (:cost params)
+             :picture (io/file (:tempfile (:picture params)))
              :user_id (:user_id params)}))
         (pages [:div "添加成功."]))
     (pages [:a {:href "/login"} "請登錄>>"])))
