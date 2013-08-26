@@ -1,8 +1,9 @@
-(defproject org.clojars.gzmask/rich_pos "0.1.0-SNAPSHOT"
+(defproject org.clojars.gzmask/rich_pos "0.1.0-beta1"
   :description "POS"
   :url "http://richever.ca"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :repositories [["clojars" {:sign-releases false}]]
   :plugins [[lein-cljsbuild "0.3.2"]
             [lein-ring "0.8.5"]]
   :dependencies [[ring/ring-core "1.1.8"]
