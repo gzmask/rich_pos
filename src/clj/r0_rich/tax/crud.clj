@@ -62,8 +62,8 @@
 
 (defn remove [id session]
   (if (:login session)
-    (do (j/delete! SQLDB :Item (sql/where {:id id}))
-        (pages [:div (str id "号商品删除成功.")]))
+    (do (j/delete! SQLDB :Tax (sql/where {:id id}))
+        (pages [:div (str id "号删除成功.")]))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn index [session]
