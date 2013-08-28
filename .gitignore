@@ -1,4 +1,5 @@
 /resources/db/data.db
+/resources/db/backup.sql
 /target
 /lib
 /classes

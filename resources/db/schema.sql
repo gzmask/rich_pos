@@ -3,7 +3,7 @@ id INTEGER PRIMARY KEY AUTOINCREMENT,
 total INTEGER,
 timestamp INTEGER,
 refund Boolean
-, tax INTEGER);
+, tax float);
 CREATE TABLE Item (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 item_name varchar(255),

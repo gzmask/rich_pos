@@ -21,6 +21,8 @@
        (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn new [session]
+  (let [taxs (j/with-connection SQLDB
+               (j/with-query-results rs [(str "select * from Tax")] (doall rs)))]
   (if (and (:login session) (:invoice session))
     (pages 
       (list 
@@ -30,28 +32,33 @@
              [:input.span1 {:value "plucode" :type "text" :readonly "readonly"}]
              [:input.span2 {:value "item name" :type "text" :readonly "readonly"}]
              [:input.span1 {:value "price" :type "text" :readonly "readonly"}]]
-           (for [invoice (:invoice session)] 
+           (for [item (:invoice session)] 
              [:div.row-fluid 
-               [:input.span1 {:name (str "items["(name (first invoice))"][item_id]") :type "text" :readonly "readonly" :value (first invoice)}]
-               [:input.span1 {:name (str "items["(name (first invoice))"][plucode]") :type "text" :readonly "readonly" :value (:plucode (second invoice))}]
-               [:input.span2 {:name (str "items["(name (first invoice))"][item_name]") :type "text" :readonly "readonly" :value (:item_name (second invoice))}]
-               [:input.span1.price_change {:name (str "items["(name (first invoice))"][price]") 
+               [:input.span1 {:name (str "items["(name (first item))"][item_id]") :type "text" :readonly "readonly" :value (first item)}]
+               [:input.span1 {:name (str "items["(name (first item))"][plucode]") :type "text" :readonly "readonly" :value (:plucode (second item))}]
+               [:input.span2 {:name (str "items["(name (first item))"][item_name]") :type "text" :readonly "readonly" :value (:item_name (second item))}]
+               [:input.span1.price_change {:name (str "items["(name (first item))"][price]") 
                               :type "number" :min 0 
-                              :step (/ (:price (second invoice)) 10) 
-                              :max (+ (:price (second invoice)) 0.001) 
-                              :value (:price (second invoice))}]])
+                              :step (/ (:price (second item)) 10) 
+                              :max (+ (:price (second item)) 0.001) 
+                              :value (:price (second item))}]])
            [:div.row-fluid 
              [:input.span1.offset2 {:value "总数:" :type "text" :readonly "readonly"}] 
              [:input.span1 {:type "number" :readonly "readonly" :name "total"
                             :id "price_total"
                             :value 
                             (format "%.2f" (reduce + (for [invoice (:invoice session)] 
-                                                       (double (:price (second invoice))))))}]]
+                                                       (double (:price (second invoice))))))}]] 
+           [:div.row-fluid 
+             [:lable.span2.offset1 "税收类型:"]
+             [:select#tax_change.span3 {:name "tax"}
+              (for [tax taxs]
+                [:option {:value (:rate tax)} (str (:name tax) " " (:rate tax))])]]
            [:div.row-fluid 
              [:input.span2.offset1 {:type "submit" :value "结帐"}]
              [:input.span2 {:type "reset" :value "重置"}]]]
         [:script {:src "/invoice_new.js"}]))
-    (pages [:a {:href "/items"} "請先登錄或选择商品"])))
+    (pages [:a {:href "/items"} "請先登錄或选择商品"]))))
 
 
 (defn create [params session]
@@ -60,6 +67,7 @@
       (let [invoice (j/insert! SQLDB :Invoice 
                                {:timestamp (System/currentTimeMillis) 
                                 :total (:total params) 
+                                :tax (:tax params)
                                 :refund 0})
             invoice_id ((keyword "last_insert_rowid()") (first invoice))] 
         (doseq [item (:items params)] 
@@ -98,6 +106,9 @@
          [:div.span2 "invoice total price: "] 
          [:div.span1 (:total invoice)]]
         [:div.row-fluid 
+         [:div.span2 "invoice tax rate: "] 
+         [:div.span1 (:tax invoice)]]
+        [:div.row-fluid 
          [:div.span2 "invoice timestamp: "] 
          [:div.span3 (:timestamp invoice)]]
         [:div.row-fluid 
@@ -120,6 +131,9 @@
         [:div.row-fluid 
          [:div.span2 "invoice total price: "] 
          [:div.span1 (:total invoice)]]
+        [:div.row-fluid 
+         [:div.span2 "invoice tax rate: "] 
+         [:div.span1 (:tax invoice)]]
         [:div.row-fluid 
          [:div.span2 "invoice timestamp: "] 
          [:div.span3 (:timestamp invoice)]]
@@ -147,6 +161,9 @@
            [:div.row-fluid
             [:lable.span2.offset1 "总价:"]
             [:input.span3 {:name "total" :type "text" :value (:total invoice)}]]
+           [:div.row-fluid
+            [:lable.span2.offset1 "税率:"]
+            [:input.span3 {:name "tax" :type "text" :value (:tax invoice)}]]
            [:div.row-fluid
             [:lable.span2.offset1 "时间戳:"]
             [:input.span3 {:name "timestamp" :type "text" :value (:timestamp invoice)}]]
