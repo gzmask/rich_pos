@@ -48,10 +48,12 @@
                                               {(keyword (str (:item_id params)))
                                                {:price (read-string (:price params))
                                                 :item_name (:item_name params)
+                                                :taxable (:taxable params)
                                                 :plucode (:plucode params)}}
                                               (for [item items]
                                                 {(keyword (str (:id item)))
                                                  {:price (:price item)
                                                   :item_name (:item_name item)
+                                                  :taxable (:taxable params)
                                                   :plucode (:plucode item)}})))))}
       (pages [:div "你還沒登錄"])))

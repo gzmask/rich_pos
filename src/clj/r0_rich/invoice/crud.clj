@@ -37,11 +37,17 @@
                [:input.span1 {:name (str "items["(name (first item))"][item_id]") :type "text" :readonly "readonly" :value (first item)}]
                [:input.span1 {:name (str "items["(name (first item))"][plucode]") :type "text" :readonly "readonly" :value (:plucode (second item))}]
                [:input.span2 {:name (str "items["(name (first item))"][item_name]") :type "text" :readonly "readonly" :value (:item_name (second item))}]
-               [:input.span1.price_change {:name (str "items["(name (first item))"][price]") 
+               (if (= (:taxable (second item)) "1")
+                 [:input.span1.price_change_with_tax {:name (str "items["(name (first item))"][price]") 
                               :type "number" :min 0 
                               :step (/ (:price (second item)) 10) 
                               :max (+ (:price (second item)) 0.001) 
-                              :value (:price (second item))}]])
+                              :value (:price (second item))}]
+                 [:input.span1.price_change_without_tax {:name (str "items["(name (first item))"][price]") 
+                              :type "number" :min 0 
+                              :step (/ (:price (second item)) 10) 
+                              :max (+ (:price (second item)) 0.001) 
+                              :value (:price (second item))}])])
            [:div.row-fluid 
              [:input.span1.offset2 {:value "总数:" :type "text" :readonly "readonly"}] 
              [:input.span1 {:type "number" :readonly "readonly" :name "total"
@@ -52,6 +58,7 @@
            [:div.row-fluid 
              [:lable.span2.offset1 "税收类型:"]
              [:select#tax_change.span3 {:name "tax"}
+                [:option {:value 0 :disabled "disabled" :selected "selected"} "add tax"]
               (for [tax taxs]
                 [:option {:value (:rate tax)} (str (:name tax) " " (:rate tax))])]]
            [:div.row-fluid 

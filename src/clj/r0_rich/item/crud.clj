@@ -33,6 +33,10 @@
            [:div.row-fluid
             [:lable.span2.offset1 "库存:"]
             [:input.span3 {:name "quantity" :type "text"}]] 
+           [:div.row-fluid 
+            [:lable.span2.offset1 "税收:"]
+            [:input.span1 {:name "taxable" :type "radio" :value 1 :checked "checked"} "有税"]
+            [:input.span1 {:name "taxable" :type "radio" :value 0} "无税"]]
            [:div.row-fluid
             [:lable.span2.offset1 "图片:"]
             [:input.span3 {:name "picture" :type "file" :size "20"}]]
@@ -50,7 +54,6 @@
              :plucode (:plucode params)
              :price (:price params)
              :cost (:cost params)
-             :picture (io/file (:tempfile (:picture params)))
              :user_id (:user_id params)}))
         (pages [:div "添加成功."]))
     (pages [:a {:href "/login"} "請登錄>>"])))
@@ -71,6 +74,7 @@
             [:input {:name "item_id" :value (:id item) :type "hidden"}]
             [:input {:name "item_name" :value (:item_name item) :type "hidden"}]
             [:input {:name "plucode" :value (:plucode item) :type "hidden"}]
+            [:input {:name "taxable" :value (:taxable item) :type "hidden"}]
             [:div.row-fluid 
              [:label.span2.offset1 "数目(同型随选):"] 
              [:input.span3 {:name "quantity" :type "number" :min 1 :max (count items) :value 1}]]
@@ -99,6 +103,8 @@
              [:div.span5.hidenum "$" (format "%.2f" profit)]]
             [:div.row-fluid [:div.span2 "Quantity: "]
              [:div.span5 (count items)]]
+            [:div.row-fluid [:div.span2 "taxable: "]
+             [:div.span5 (:taxable item)]]
             [:div.row-fluid [:div#qrcode.span5 (:item_name item)]
              [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]]] 
           [:br]
@@ -169,6 +175,10 @@
             [:lable.span2.offset1 "成本:"]
             [:input.span3 {:name "cost" :type "text" :value (:cost item)}]]
             [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
+           [:div.row-fluid 
+            [:lable.span2.offset1 "税收:"]
+            [:input.span1 {:name "taxable" :type "radio" :value 1 :checked (if (== 1 (:taxable item)) "checked")} "有税"]
+            [:input.span1 {:name "taxable" :type "radio" :value 0 :checked (if (== 0 (:taxable item)) "checked")} "无税"]]
            [:div.row-fluid
             [:input.span1.offset1 {:type "submit" :value "修改"}]]])
     (pages [:a {:href "/login"} "請登錄>>"]))))
@@ -205,6 +215,10 @@
             [:lable.span2.offset1 "成本:"]
             [:input.span3 {:name "cost" :type "text" :value (:cost item)}]]
             [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
+           [:div.row-fluid 
+            [:lable.span2.offset1 "税收:"]
+            [:input.span1 {:name "taxable" :type "radio" :value 1 :checked (if (== 1 (:taxable item)) "checked")} "有税"]
+            [:input.span1 {:name "taxable" :type "radio" :value 0 :checked (if (== 0 (:taxable item)) "checked")} "无税"]]
            [:div.row-fluid
             [:input.span1.offset1 {:type "submit" :value "修改"}]]])
     (pages [:a {:href "/login"} "請登錄>>"]))))
