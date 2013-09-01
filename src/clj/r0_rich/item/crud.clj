@@ -51,14 +51,14 @@
 
 (defn create [params session]
   (if (:login session)
-    (do ; (doseq [x (range (Integer. (:quantity params)))]
+    (do (doseq [x (range (Integer. (:quantity params)))]
       (j/insert! SQLDB :Item
                  {:item_name (:item_name params)
                   :item_type (:item_type params)
                   :plucode (:plucode params)
                   :price (:price params)
                   :cost (:cost params)
-                  :user_id (:user_id params)}) ;)
+                  :user_id (:user_id params)})
       (ds/copy (:tempfile (:picture params))
                (ds/file-str (str PRO_PIC_FOLDER "/" (:filename (:picture params)))))
       (pages [:div "添加成功."]))
