@@ -6,3 +6,4 @@
 
 ;no tailing '/'
 (def SERVER_URL "http://prodvideo.cat.uregina.ca:3000")
+(def PRO_PIC_FOLDER "resources/pro-pic")

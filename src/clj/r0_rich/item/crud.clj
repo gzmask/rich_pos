@@ -6,56 +6,62 @@
     (:require [clojure.java.jdbc :as j]
               [clojure.java.jdbc.sql :as sql]
               [clojure.java.io :as io]
-              [clojure.string :as str]))
+              [clojure.string :as str]
+              [clojure.contrib.duck-streams :as ds]))
 
 (defn new [session]
   (let [types (j/with-connection SQLDB
                (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
   (if (:login session)
-    (pages [:form.span10 {:action "/items/create" :method "post" :enctype "multipart/form-data"}
-           [:div.row-fluid
-            [:lable.span2.offset1 "商品名称:"]
-            [:input.span3 {:name "item_name" :type "text"}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "商品类型:"]
-            [:select.span3 {:name "item_type"}
-             (for [type types]
-               [:option {:value (:id type)} (:type_name type)])]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "PLU代码:"]
-            [:input.span3 {:name "plucode" :type "text"}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "价格:"]
-            [:input.span3 {:name "price" :type "text"}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "成本:"]
-            [:input.span3 {:name "cost" :type "text"}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "库存:"]
-            [:input.span3 {:name "quantity" :type "text"}]] 
-           [:div.row-fluid 
-            [:lable.span2.offset1 "税收:"]
-            [:input.span1 {:name "taxable" :type "radio" :value 1 :checked "checked"} "有税"]
-            [:input.span1 {:name "taxable" :type "radio" :value 0} "无税"]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "图片:"]
-            [:input.span3 {:name "picture" :type "file" :size "20"}]]
-           [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
-           [:div.row-fluid
-            [:input.span1.offset1 {:type "submit" :value "添加"}]]])
+    (pages (let [div   :div.row-fluid
+                 lable :lable.span2.offset1
+                 input :input.span3]
+             [:form.span10 {:action "/items/create" :method "post" :enctype "multipart/form-data"}
+              [div
+               [lable "商品名称:"]
+               [input {:name "item_name" :type "text"}]]
+              [div
+               [lable "商品类型:"]
+               [:select.span3 {:name "item_type"}
+                (for [type types]
+                  [:option {:value (:id type)} (:type_name type)])]]
+              [div
+               [lable "PLU代码:"]
+               [input {:name "plucode" :type "text"}]]
+              [div
+               [lable "价格:"]
+               [input {:name "price" :type "text"}]]
+              [div
+               [lable "成本:"]
+               [input {:name "cost" :type "text"}]]
+              [div
+               [lable "库存:"]
+               [input {:name "quantity" :type "text"}]] 
+              [div 
+               [lable "税收:"]
+               [:input.span1 {:name "taxable" :type "radio" :value 1 :checked "checked"} "有税"]
+               [:input.span1 {:name "taxable" :type "radio" :value 0} "无税"]]
+              [div
+               [lable "图片:"]
+               [input {:name "picture" :type "file" :size "20"}]]
+              [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
+              [div
+               [:input.span1.offset1 {:type "submit" :value "添加"}]]]))
     (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn create [params session]
   (if (:login session)
     (do (doseq [x (range (Integer. (:quantity params)))]
-          (j/insert! SQLDB :Item
-            {:item_name (:item_name params)
-             :item_type (:item_type params)
-             :plucode (:plucode params)
-             :price (:price params)
-             :cost (:cost params)
-             :user_id (:user_id params)}))
-        (pages [:div "添加成功."]))
+      (j/insert! SQLDB :Item
+                 {:item_name (:item_name params)
+                  :item_type (:item_type params)
+                  :plucode (:plucode params)
+                  :price (:price params)
+                  :cost (:cost params)
+                  :user_id (:user_id params)})
+      (ds/copy (:tempfile (:picture params))
+               (ds/file-str (str PRO_PIC_FOLDER "/" (:filename (:picture params)))))
+      (pages [:div "添加成功."]))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn def_item [title body]
