@@ -14,6 +14,7 @@
                  [org.xerial/sqlite-jdbc "3.7.2"]
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
                  [org.clojure/clojure "1.5.1"]
+                 [org.clojure/clojure-contrib "1.2.0"]
                  [enfocus "2.0.0-beta1"]]
   :source-paths ["src/clj"]
   :ring {:handler r0_rich.handle/app

@@ -1,28 +1,28 @@
 CREATE TABLE User (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-account_name varchar(255),
-password varchar(255),
-user_role int
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_name varchar(255),
+    password varchar(255),
+    user_role int
 );
 
 CREATE TABLE User_role (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-role_name varchar(255)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role_name varchar(255)
 );
 
 CREATE TABLE Item (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-item_name varchar(255),
-item_type int,
-plucode varchar(255),
-price float,
-cost float,
-user_id int
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_name varchar(255),
+    item_type int,
+    plucode varchar(255),
+    price float,
+    cost float,
+    user_id int
 );
 
 CREATE TABLE Item_type (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-type_name varchar(255)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type_name varchar(255)
 );
 
 insert into User_role (id, role_name) values (1, "developer");
