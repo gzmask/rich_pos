@@ -167,30 +167,30 @@
                (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
   (if (:login session)
     (pages [:form.span10 {:action (str "/items/" id "/single_change") :method "post"}
-           [:div.row-fluid
-            [:lable.span2.offset1 "商品名称:"]
-            [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "商品类型:"]
-            [:select.span3 {:name "item_type"}
-             (for [type types]
-               [:option {:value (:id type)} (:type_name type)])]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "PLU代码:"]
-            [:input.span3 {:name "plucode" :type "text" :value (:plucode item)}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "价格:"]
-            [:input.span3 {:name "price" :type "text" :value (:price item)}]]
-           [:div.row-fluid
-            [:lable.span2.offset1 "成本:"]
-            [:input.span3 {:name "cost" :type "text" :value (:cost item)}]]
+            [:div.row-fluid
+             [:lable.span2.offset1 "商品名称:"]
+             [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
+            [:div.row-fluid
+             [:lable.span2.offset1 "商品类型:"]
+             [:select.span3 {:name "item_type"}
+              (for [type types]
+                [:option {:value (:id type)} (:type_name type)])]]
+            [:div.row-fluid
+             [:lable.span2.offset1 "PLU代码:"]
+             [:input.span3 {:name "plucode" :type "text" :value (:plucode item)}]]
+            [:div.row-fluid
+             [:lable.span2.offset1 "价格:"]
+             [:input.span3 {:name "price" :type "text" :value (:price item)}]]
+            [:div.row-fluid
+             [:lable.span2.offset1 "成本:"]
+             [:input.span3 {:name "cost" :type "text" :value (:cost item)}]]
             [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
-           [:div.row-fluid 
-            [:lable.span2.offset1 "税收:"]
-            [:input.span1 {:name "taxable" :type "radio" :value 1 :checked (if (== 1 (:taxable item)) "checked")} "有税"]
-            [:input.span1 {:name "taxable" :type "radio" :value 0 :checked (if (== 0 (:taxable item)) "checked")} "无税"]]
-           [:div.row-fluid
-            [:input.span1.offset1 {:type "submit" :value "修改"}]]])
+            [:div.row-fluid 
+             [:lable.span2.offset1 "税收:"]
+             [:input.span1 {:name "taxable" :type "radio" :value 1 :checked (if (== 1 (:taxable item)) "checked" "")} "有税"]
+             [:input.span1 {:name "taxable" :type "radio" :value 0 :checked (if (== 0 (:taxable item)) "checked")} "无税"]]
+            [:div.row-fluid
+             [:input.span1.offset1 {:type "submit" :value "修改"}]]])
     (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn single_change [params session]

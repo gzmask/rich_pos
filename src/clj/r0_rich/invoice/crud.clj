@@ -61,9 +61,11 @@
                 [:option {:value 0 :disabled "disabled" :selected "selected"} "add tax"]
               (for [tax taxs]
                 [:option {:value (:rate tax)} (str (:name tax) " " (:rate tax))])]]
-           [:div.row-fluid 
-             [:input.span2.offset1 {:type "submit" :value "结帐"}]
-             [:input.span2 {:type "reset" :value "重置"}]]]
+         [:div.row-fluid 
+          [:input.span2.offset1 {:type "submit" :value "结帐"}]
+          [:input.span2 {:type "reset" :value "重置"}]]]
+        [:div.row-fluid
+         [:a.span2.offset1 {:href "/items"} "Shopping Continue"]]
         [:script {:src "/invoice_new.js"}]))
     (pages [:a {:href "/items"} "請先登錄或选择商品"]))))
 
