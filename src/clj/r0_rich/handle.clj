@@ -14,8 +14,7 @@
             [r0_rich.invoice.crud :as invoice]
             [r0_rich.tax.crud :as tax]
             [r0_rich.session.log :as log]
-            [compojure.route :as route]
-            [clojure.contrib.duck-streams :as ds]))
+            [compojure.route :as route]))
 
 (defroutes app-routes
   (route/resources "/")

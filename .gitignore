@@ -1,5 +1,6 @@
 /resources/db/data.db
 /resources/db/backup.sql
+/resources/public/pro-pic/*
 /target
 /lib
 /classes
@@ -12,3 +13,5 @@ pom.xml.asc
 .lein-failures
 .lein-plugins
 .lein-repl-history
+.nrepl-port
+*.swp

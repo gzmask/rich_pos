@@ -6,8 +6,7 @@
     (:require [clojure.java.jdbc :as j]
               [clojure.java.jdbc.sql :as sql]
               [clojure.java.io :as io]
-              [clojure.string :as str]
-              [clojure.contrib.duck-streams :as ds]))
+              [clojure.string :as str]))
 
 (defn new [session]
   (let [types (j/with-connection SQLDB
@@ -63,10 +62,10 @@
                       :picture (if-let [picture (:filename (:picture params))]
                                  (str PRO_PIC_FOLDER "/" (:filename (:picture params))))})
           (if-let [picture (:filename (:picture params))]
-            (ds/copy (:tempfile (:picture params))
-                     (ds/file-str (str PRO_PIC_FOLDER "/" (:filename (:picture params))))))
+            (io/copy (io/file (:tempfile (:picture params)))
+                   (io/file (str PRO_PIC_FOLDER "/" (:filename (:picture params)))))))
           (pages [:div "添加成功."]))
-        (pages [:a {:href "/login"} "請登錄>>"]))))
+        (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn def_item [title body]
   "compose page, convert title as id"
