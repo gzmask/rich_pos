@@ -58,9 +58,13 @@
                       :plucode (:plucode params)
                       :price (:price params)
                       :cost (:cost params)
-                      :user_id (:user_id params)})
-          (ds/copy (:tempfile (:picture params))
-                   (ds/file-str (str PRO_PIC_FOLDER "/" (:filename (:picture params)))))
+                      :user_id (:user_id params)
+                      :taxable (:taxable params)
+                      :picture (if-let [picture (:filename (:picture params))]
+                                 (str PRO_PIC_FOLDER "/" (:filename (:picture params))))})
+          (if-let [picture (:filename (:picture params))]
+            (ds/copy (:tempfile (:picture params))
+                     (ds/file-str (str PRO_PIC_FOLDER "/" (:filename (:picture params))))))
           (pages [:div "添加成功."]))
         (pages [:a {:href "/login"} "請登錄>>"]))))
 
