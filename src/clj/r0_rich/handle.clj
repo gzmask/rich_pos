@@ -4,7 +4,8 @@
         r0_rich.pages.home_pg
         r0_rich.pages.no_pg
         compojure.core
-        ring.adapter.jetty)
+        ring.adapter.jetty
+        r0_rich.wrap)
   (:require [compojure.handler :as handler]
             [ring.middleware.session :as session]
             [ring.middleware.params :as params]
@@ -23,7 +24,10 @@
   (GET "/home" [] home_pg)
   (GET "/items" {session :session} (item/index session))
   (GET "/items/new" {session :session} (item/new session))
-  (POST "/items/create" {params :params session :session} (item/create params session))
+  (mulparams/wrap-multipart-params
+   (POST "/items/create" {params :params session :session}
+         (wrap-error-handler
+          (item/create params session))))
   (GET "/items/:id" {params :params session :session} (item/show (:id params) session))
   (GET "/items/:id/single_update" {{id :id} :params session :session} (item/single_update id session))
   (POST "/items/:id/single_change" {params :params session :session} (item/single_change params session))
@@ -60,7 +64,8 @@
   (route/not-found no_pg))
 
 (def app
-  (mulparams/wrap-multipart-params (params/wrap-params (session/wrap-session (handler/site app-routes)))))
+  (-> (handler/site app-routes)
+      session/wrap-session))
 
 (defn -main []
     (run-jetty #'app {:port 3000 :join? false}))

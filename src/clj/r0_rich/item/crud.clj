@@ -60,12 +60,16 @@
                       :user_id (:user_id params)
                       :taxable (:taxable params)
                       :picture (if-let [picture (:filename (:picture params))]
-                                 (str PRO_PIC_FOLDER "/" (:filename (:picture params))))})
-          (if-let [picture (:filename (:picture params))]
+                                 (if (empty? picture)
+                                   nil
+                                   (str PRO_PIC_FOLDER "/" picture)))}))
+        ;; picturn just need one
+        (if-let [picture (:filename (:picture params))]	       
+          (if (not (empty? picture))
             (io/copy (io/file (:tempfile (:picture params)))
-                   (io/file (str PRO_PIC_FOLDER "/" (:filename (:picture params)))))))
-          (pages [:div "添加成功."]))
-        (pages [:a {:href "/login"} "請登錄>>"])))
+                     (io/file (str PRO_PIC_FOLDER "/" (:filename (:picture params)))))))
+        (pages [:div "添加成功."]))
+    (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn def_item [title body]
   "compose page, convert title as id"

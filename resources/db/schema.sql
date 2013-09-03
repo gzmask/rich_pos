@@ -38,7 +38,7 @@ CREATE TABLE User (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 account_name varchar(255),
 password varchar(255),
-user_role int
+user_role INTEGER 
 );
 CREATE TABLE User_role (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
