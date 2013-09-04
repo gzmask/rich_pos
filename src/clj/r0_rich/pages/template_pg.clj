@@ -1,6 +1,7 @@
 (ns r0_rich.pages.template_pg
     (:use hiccup.page
-          hiccup.core)
+          hiccup.core
+          hiccup.util)
     (:require [clojure.string :as s]))
 
 
@@ -14,15 +15,25 @@
                        ["/home" "/items" "/item_types" "/taxs"  "/invoices" "/invoices/new" "/login"]
                        ["icon-home" "icon-home" "icon-home" "icon-home" "icon-home" "icon-home" "icon-home"]))
 
-(defn pages [page]
+(defn include-js-css
+  "Include js or css file"
+  [& files]
+  (for [f files]
+    (if (.endsWith f "js")
+      [:script {:type "text/javascript" :src (to-uri f)}]
+      [:link {:type "text/css" :href (to-uri f) :rel "stylesheet"}])))
+
+(defn pages [page & js]
   "get page by pagename"
   (html5
    [:head 
     [:title "長亨POS系統"]
+    (if js
+      (apply include-js-css js))]
     (include-css "/vendor/bootstrap/css/bootstrap.min.css")
     (include-css "/vendor/bootstrap/css/bootstrap-responsive.css")
     (include-css "/vendor/font-awesome/css/font-awesome.min.css")
-    (include-css "/pos_bg_style.css")]
+    (include-css "/pos_bg_style.css")
    [:body
     [:div.row-fluid.navigation_bar nav_bar]
     [:div.row-fluid.content [:h1.offset1 "長亨POS系統"]

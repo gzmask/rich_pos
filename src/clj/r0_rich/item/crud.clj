@@ -45,7 +45,9 @@
                [input {:name "picture" :type "file" :size "20"}]]
               [:input {:value (:user_id session)  :name "user_id" :type "hidden"}]
               [div
-               [:input.span1.offset1 {:type "submit" :value "添加"}]]]))
+               [:input.span1.offset1 {:type "submit" :value "添加"}]]])
+           "/vendor/qr/jquery.min.js"
+           "/vendor/trim_form_text/trim-form-text.js")
     (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn create [params session]
