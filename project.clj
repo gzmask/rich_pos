@@ -17,7 +17,7 @@
                  [enfocus "2.0.0-beta1"]]
   :source-paths ["src/clj"]
   :ring {:handler r0_rich.handle/app
-         :auto-relod? true
+         :auto-reload? true
          :nrepl {:start? true :port 7000}}
   :main r0_rich.handle 
   :profiles {:uberjar {:aot [r0_rich.handle]}}

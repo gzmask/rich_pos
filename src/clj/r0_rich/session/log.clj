@@ -20,14 +20,16 @@
   (if (:login session)
     (pages [:div "用户" (:user_name session) [:a {:href "/logout"} "登出"]])
     (pages [:form.span10 {:action "/check#login" :method "post"}
-     [:div.row-fluid
-      [:label.span1.offset1 "User name:"]
-      [:input#username.span3 {:name "username" :type "text"}]]
-     [:div.row-fluid
-      [:label.span1.offset1 "Password:"]
-      [:input#password.span3 {:name "password" :type "password"}]]
-     [:div.row-fluid
-      [:input.span1.offset1 {:type "submit" :value "Login"}]]])))
+            [:div.row-fluid
+             [:label.span1.offset1 "User name:"]
+             [:input#username.span3 {:name "username" :type "text"}]]
+            [:div.row-fluid
+             [:label.span1.offset1 "Password:"]
+             [:input#password.span3 {:name "password" :type "password"}]]
+            [:div.row-fluid
+             [:input.span1.offset1 {:type "submit" :value "Login"}]]]
+           "/vendor/qr/jquery.min.js"
+           "/vendor/trim_form_text/trim-form-text.js")))
 
 (defn logout [session]
   (if (:login session)
