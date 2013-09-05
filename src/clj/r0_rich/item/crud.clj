@@ -54,7 +54,7 @@
   (if (:login session)
     (let [pic-name (:filename (:picture params))
           pic-path (if (empty? pic-name) nil
-                       (str PRO_PIC_FOLDER "/" (:user_id params) "/" pic-name))]
+                       (str PRO_PIC_FOLDER "/" (:plucode params) "/" pic-name))]
       (do (doseq [x (range (Integer. (:quantity params)))]
             (j/insert! SQLDB :Item
                        {:item_name (:item_name params)
@@ -64,10 +64,9 @@
                         :cost (:cost params)
                         :user_id (:user_id params)
                         :taxable (:taxable params)
-                        :picture (if-let [picture (:filename (:picture params))]
-                                   (if (empty? picture)
-                                     nil
-                                     (str PRO_PIC_FOLDER "/" picture)))}))
+                        :picture (if (empty? pic-path) 
+                                   nil 
+                                   pic-path)}))
           (if pic-path
             (do (io/make-parents pic-path)
                 (io/copy (io/file (:tempfile (:picture params))) (io/file pic-path))))
