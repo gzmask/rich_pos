@@ -171,7 +171,7 @@
         types (j/with-connection SQLDB
                 (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
     (if (:login session)
-      (pages [:form.span10 {:action (str "/items/" id "/single_change") :method "post"}
+      (pages [:form.span10 {:action (str "/items/" id "/single_change") :method "post" :enctype "multipart/form-data"}
               [:div.row-fluid
                [:lable.span2.offset1 "商品名称:"]
                [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
@@ -195,13 +195,32 @@
                [:input.span1 {:name "taxable" :type "radio" :value 1 :checked (if (== 1 (:taxable item)) "checked" "")} "有税"]
                [:input.span1 {:name "taxable" :type "radio" :value 0 :checked (if (== 0 (:taxable item)) "checked")} "无税"]]
               [:div.row-fluid
+               [:lable.span2.offset1 "Picture"]
+               [:input.span3 {:name "picture" :type "file" :size "20"}]]
+              [:div.row-fluid
                [:input.span1.offset1 {:type "submit" :value "修改"}]]])
       (pages [:a {:href "/login"} "請登錄>>"]))))
+
+(defn- single-picture-change [params]
+  (let [pic-name (:filename (:picture params))
+        pic-path (if (empty? pic-name) nil (str PRO_PIC_FOLDER "/" (:plucode params) "/" pic-name))]
+    (if pic-path
+      (do
+        (j/with-connection SQLDB
+          (let [old-pic-path (j/with-query-results*
+                               [(str "select picture from Item where id = " (:id params) ";")]
+                               #(:picture (first (doall %))))]
+            (if-not (j/with-query-results* ;; is this picture shared by another item?
+                      [(str "select picture from Item where picture = '" old-pic-path "';")] #(second (doall %)))
+              (io/delete-file old-pic-path true)))
+          (j/update-values :Item (sql/where {:id (:id params)}) {:picture pic-path}))
+        (io/copy (:tempfile (:picture params)) (io/file pic-path))))))
 
 (defn single_change [params session]
   (if (:login session)
     (do 
-      (j/update! SQLDB :Item params (sql/where {:id (:id params)}))
+      (single-picture-change params)
+      (j/update! SQLDB :Item (dissoc params :picture) (sql/where {:id (:id params)}))
       (pages [:h2 "修改成功."]))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
@@ -211,7 +230,7 @@
         types (j/with-connection SQLDB
                 (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
     (if (:login session)
-      (pages [:form.span10 {:action (str "/items/" id "/change") :method "post"}
+      (pages [:form.span10 {:action (str "/items/" id "/change") :method "post" :enctype "multipart/form-data"}
               [:div.row-fluid
                [:lable.span2.offset1 "商品名称:"]
                [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
@@ -235,30 +254,56 @@
                [:input.span1 {:name "taxable" :type "radio" :value 1 :checked (if (== 1 (:taxable item)) "checked")} "有税"]
                [:input.span1 {:name "taxable" :type "radio" :value 0 :checked (if (== 0 (:taxable item)) "checked")} "无税"]]
               [:div.row-fluid
+               [:lable.span2.offset1 "Picture"]
+               [:input.span3 {:name "picture" :type "file" :size "20"}]]
+              [:div.row-fluid
                [:input.span1.offset1 {:type "submit" :value "修改"}]]])
       (pages [:a {:href "/login"} "請登錄>>"]))))
 
+(defn- picture-change [params]
+  (let [pic-name (:filename (:picture params))
+        pic-path (if (empty? pic-name) nil (str PRO_PIC_FOLDER "/" (:plucode params) "/" pic-name))]
+    (if pic-path
+      (j/with-connection SQLDB
+        (let [items (j/with-query-results rs [(str "select * from Item where plucode = '" (:plucode params) "';")] (doall rs))]
+          (doseq [item items]
+            (io/delete-file (:picture item) true)))
+        (j/update-values :Item (sql/where {:plucode (:plucode params)}) {:picture pic-path})
+        (io/copy (:tempfile (:picture params)) (io/file pic-path))))))
 
 (defn change [params session]
   (let [items (j/with-connection SQLDB 
                 (j/with-query-results rs [(str "select * from Item where plucode = '" (:plucode params) "';")] (doall rs)))]
     (if (:login session)
       (do 
+        (picture-change params)
         (doseq [item items] 
-          (j/update! SQLDB :Item (assoc params :id (:id item)) (sql/where {:id (:id item)}))) 
+          (j/update! SQLDB :Item (dissoc (assoc params :id (:id item)) :picture) (sql/where {:id (:id item)}))) 
         (pages [:h2 "修改成功."]))
       (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn plu_remove [plucode session]
   (if (:login session)
-    (do (j/delete! SQLDB :Item (sql/where {:plucode plucode}))
-        (pages [:div (str "所有Plu:" plucode "的商品删除成功.")]))
+    (do
+      (doseq [item (j/with-connection SQLDB
+                     (j/with-query-results rs [(str "select picture from item where plucode = '" plucode "';")] (doall rs)))]
+        (io/delete-file (:picture item) true))
+      (j/delete! SQLDB :Item (sql/where {:plucode plucode}))
+      (pages [:div (str "所有Plu:" plucode "的商品删除成功.")]))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn single_remove [id session]
   (if (:login session)
-    (do (j/delete! SQLDB :Item (sql/where {:id id}))
-        (pages [:div (str id "号商品删除成功.")]))
+    (do
+      (j/with-connection SQLDB
+          (let [pic-path (j/with-query-results*
+                           [(str "select picture from Item where id = " id ";")]
+                           #(:picture (first (doall %))))]
+            (if-not (second (j/with-query-results rs
+                              [(str "select picture from item where picture = '" pic-path "';")] (doall rs)))
+              (io/delete-file pic-path true))))
+      (j/delete! SQLDB :Item (sql/where {:id id}))
+      (pages [:div (str id "号商品删除成功.")]))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn index [session]
