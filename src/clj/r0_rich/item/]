@@ -211,7 +211,7 @@
         types (j/with-connection SQLDB
                 (j/with-query-results rs [(str "select * from Item_type")] (doall rs)))]
     (if (:login session)
-      (pages [:form.span10 {:action (str "/items/" id "/change") :method "post" :enctype "multipart/form-data"}
+      (pages [:form.span10 {:action (str "/items/" id "/change") :method "post"}
               [:div.row-fluid
                [:lable.span2.offset1 "商品名称:"]
                [:input.span3 {:name "item_name" :type "text" :value (:item_name item)}]]
@@ -248,6 +248,7 @@
           pic-name (:filename (:picture params))
           pic-path (if (empty? pic-name) nil
                        (str PRO_PIC_FOLDER "/" (:plucode params) "/" pic-name))]
+      (println pic-path)
       (if pic-path
         (do
           (io/delete-file (or (:picture (first items)) "") true)
@@ -279,6 +280,7 @@
     (do
       (j/with-connection SQLDB
         (let [plucode (:plucode (first (j/with-query-results rs [(str "select plucode from Item where id =" id ";")] (doall rs))))]
+          (println plucode)
           (if-not (second (j/with-query-results rs [(str "select id from Item where plucode = '" plucode "';")] (doall rs)))
             (del-file-recur (str PRO_PIC_FOLDER "/" plucode) true))))
       (j/delete! SQLDB :Item (sql/where {:id id}))

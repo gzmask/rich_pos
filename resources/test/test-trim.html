@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<script type='text/javascript' src='jquery-2.0.3.js'></script>
+<script type='text/javascript' src='../js/trim-form-data.js'></script>
+<script type='text/javascript'>
+$(function() {
+    listen_sumbmit_onclick(trim_form_data);
+    });
+</script>
+</head>
+<body>
+<form action='' method='get'>
+  username: <input type='text' name='username'/><br/>
+  password: <input type='password' name='password'/><br/>
+  <input type='submit' value='submit'/>
+</form>
+</body>
+</html>
