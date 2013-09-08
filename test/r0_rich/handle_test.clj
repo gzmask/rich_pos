@@ -13,6 +13,7 @@
     (is (re-find #".*長亨POS系統.*開始.*商品.*登錄.*" 
            (:body response)))))
 
+(comment ;; comment begin
 (deftest item-page
   (let [response (app (request :get "/items"))]
     (is (= 200 
@@ -21,6 +22,7 @@
            (get (:headers response) "Content-Type")))
     (is (re-find #".*長亨POS系統.*開始.*商品.*登錄.*" 
            (:body response)))))
+) ;; comment end
  
 (deftest log-page
   (let [response (app (request :get "/login"))]
@@ -67,3 +69,16 @@
            (:body response)))
     (is (= nil
            (:session response)))))
+
+(comment ;;comment begin
+(def app
+  (try
+    (mulparams/wrap-multipart-params (params/wrap-params (session/wrap-session (handler/site app-routes))))
+    (catch Exception e
+      (println "catch a error")
+      (.printStackTrace e)
+      {:status 200
+       :header {"Content-Type" "text/html"}
+       :body   "<h1 text-align='center'>Server is busying, Please try again later</h>"})))
+
+) ;; comment end
