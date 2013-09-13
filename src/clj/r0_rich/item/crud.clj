@@ -81,6 +81,8 @@
 
 (defn admin_item_pg [item items]
   (let [profit (- (:price item) (:cost item))
+        pic-name (if (empty? (:picture item)) "false.jpg" (last (clojure.string/split (:picture item) #"\/")))
+        pic-url (str "/uploads/pro-pic/" (:plucode item) "/" pic-name)
         item_type (first (j/with-connection SQLDB
                            (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
     (def_item "商品发票"
@@ -102,7 +104,10 @@
                               :step (/ (:price item) 10)}]]
               [:div.row-fluid
                [:input.span3.offset1 {:type "submit" :value "添加至帐单"}]
-               [:input.span3 {:type "reset" :value "重置"}]]]
+               [:input.span3 {:type "reset" :value "重置"}]]
+              [:br]
+              [:div.row-fluid
+               [:img.span5 {:src pic-url}]]]
              [:div.span6
               [:div.row-fluid [:div.span2 "Item name: "] 
                [:div.span5 (:item_name item)]]
@@ -142,10 +147,15 @@
                [:a.span2 {:href (str "/items/"(:id item)"/single_remove")} "单个删除"]])))))
 
 (defn item_pg [item items]
-  (let [item_type (first (j/with-connection SQLDB
+  (let [pic-name (if (empty? (:picture item)) "false.jpg" (last (clojure.string/split (:picture item) #"\/")))
+        pic-url (str "/uploads/pro-pic/" (:plucode item) "/" pic-name)
+        item_type (first (j/with-connection SQLDB
                            (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
     (def_item "商品信息"
-      (list [:div.row-fluid [:div.span2 "Item name: "]
+      (list [:div.row-fluid
+             [:img.span5 {:src pic-url}]]
+            [:br] 
+            [:div.row-fluid [:div.span2 "Item name: "]
              [:div.span5 (:item_name item)]]
             [:div.row-fluid [:div.span2 "Item type: "]
              [:div.span5 (:type_name item_type)]]
