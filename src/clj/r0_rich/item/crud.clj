@@ -107,7 +107,7 @@
                [:input.span3 {:type "reset" :value "重置"}]]
               [:br]
               [:div.row-fluid
-               [:img.span5 {:src pic-url}]]]
+               [:a.span6.offset1 {:href pic-url} [:img {:src pic-url}]]]]
              [:div.span6
               [:div.row-fluid [:div.span2 "Item name: "] 
                [:div.span5 (:item_name item)]]
@@ -153,17 +153,17 @@
                            (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
     (def_item "商品信息"
       (list [:div.row-fluid
-             [:img.span5 {:src pic-url}]]
+             [:a.span5.offset1 {:href pic-url} [:img {:src pic-url}]]]
             [:br] 
-            [:div.row-fluid [:div.span2 "Item name: "]
+            [:div.row-fluid [:div.span2.offset1 "Item name: "]
              [:div.span5 (:item_name item)]]
-            [:div.row-fluid [:div.span2 "Item type: "]
+            [:div.row-fluid [:div.span2.offset1 "Item type: "]
              [:div.span5 (:type_name item_type)]]
-            [:div.row-fluid [:div.span2 "PLU code: "]
+            [:div.row-fluid [:div.span2.offset1 "PLU code: "]
              [:div.span5 (:plucode item)]]
-            [:div.row-fluid [:div.span2 "Price: "]
+            [:div.row-fluid [:div.span2.offset1 "Price: "]
              [:div.span5 "$" (:price item)]]
-            [:div.row-fluid [:div.span2 "Quantity: "]
+            [:div.row-fluid [:div.span2.offset1 "Quantity: "]
              [:div.span5 (count items)]]))))
 
 (defn show [id session]

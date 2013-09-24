@@ -52,7 +52,7 @@
   (GET "/taxs" {session :session} (tax/index session))
   (GET "/taxs/new" {session :session} (tax/new session))
   (POST "/taxs/create" {params :params session :session} (tax/create params session))
-  (GET "/taxs/:id/remove" {{id :id} :params session :session} (tax/remove id session))
+  (GET "/taxs/:id/remove" {{id :id} :params session :session} (tax/aremove id session))
   (GET "/taxs/:id" {params :params session :session} (tax/show (:id params) session))
   (GET "/taxs/:id/update" {{id :id} :params session :session} (tax/update id session))
   (POST "/taxs/:id/change" {params :params session :session} (tax/change params session))

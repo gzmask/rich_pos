@@ -60,7 +60,7 @@
             [:input.span1.offset1 {:type "submit" :value "修改"}]]])
     (pages [:a {:href "/login"} "請登錄>>"]))))
 
-(defn remove [id session]
+(defn aremove [id session]
   (if (:login session)
     (do (j/delete! SQLDB :Tax (sql/where {:id id}))
         (pages [:div (str id "号删除成功.")]))
