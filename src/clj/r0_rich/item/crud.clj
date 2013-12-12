@@ -73,6 +73,24 @@
           (pages [:div "添加成功."])))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
+(defn add [params session]
+  (if (:login session)
+    (let [item (first (j/with-connection SQLDB
+                      (j/with-query-results rs [(str "select * from Item where plucode = '" (:plucode params) "';")] (doall rs))))]
+      (do (doseq [x (range (Integer. (:quantity params)))]
+            (j/insert! SQLDB :Item
+                       {:item_name (:item_name item)
+                        :item_type (:item_type item)
+                        :plucode (:plucode item)
+                        :price (:price item)
+                        :cost (:cost item)
+                        :user_id (:user_id item)
+                        :taxable (:taxable item)
+                        :picture (:picture item)}))
+          (pages (list [:div "添加成功."] 
+                       [:script "window.location.replace(\"/items\");"]))))
+    (pages [:a {:href "/login"} "請登錄>>"])))
+
 (defn def_item [title body]
   "compose page, convert title as id"
   (list [:h2.offset1 title]
@@ -85,7 +103,7 @@
         pic-url (str "/uploads/pro-pic/" (:plucode item) "/" pic-name)
         item_type (first (j/with-connection SQLDB
                            (j/with-query-results rs [(str "select * from Item_type where id = '" (:item_type item) "';")] (doall rs))))]
-    (def_item "商品发票"
+    (def_item "商品信息"
       (list [:div.row-fluid 
              [:form.span6 {:method "post" :action "/updateinvoice" :novalidate "novalidate"}
               [:input {:name "item_id" :value (:id item) :type "hidden"}]
@@ -129,6 +147,9 @@
                [:input#qr_str {:type "hidden" :value (str SERVER_URL "/items/" (:id item))}]]]] 
             [:br]
             [:div.row-fluid 
+             [:form.span3 {:action (str "/items/" (:plucode item) "/add") :method "post"} 
+                       [:input.input-mini {:type "submit" :value "加货"}]
+                       [:input.input-mini {:name "quantity" :type "number" :min 1 :max 99 :value 1}]]
              [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改所有同型商品"] 
              [:a.span2 {:href (str "/items/"(:id item)"/single_update")} "修改此商品"]
              [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有同型商品"]
@@ -292,7 +313,8 @@
           (if-not (second (j/with-query-results rs [(str "select id from Item where plucode = '" plucode "';")] (doall rs)))
             (del-file-recur (str PRO_PIC_FOLDER "/" plucode) true))))
       (j/delete! SQLDB :Item (sql/where {:id id}))
-      (pages [:div (str id "号商品删除成功.")]))
+      (pages (list [:div (str id "号商品删除成功.")] 
+                   [:script "window.location.replace(\"/items\");"])))
     (pages [:a {:href "/login"} "請登錄>>"])))
 
 (defn index [session]
@@ -304,11 +326,14 @@
                    (for [item items]
                      [:div.row-fluid
                       [:div.span1 (:plucode item)]
-                      [:a.span3 {:href (str "/items/"(:id item))} (:item_name item)]
+                      [:a.span2 {:href (str "/items/"(:id item))} (:item_name item)]
                       [:div.span1 "$" (:price item)]
                       [:div.span1 (:quantity item)]
                       [:a.span2 {:href (str "/items/"(:id item)"/update")} "修改所有"]
-                      [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有"]])))
+                      [:a.span2 {:href (str "/items/"(:plucode item)"/remove")} "删除所有"]
+                      [:form {:action (str "/items/" (:plucode item) "/add") :method "post"} 
+                       [:input.input-mini {:type "submit" :value "加货"}]
+                       [:input.input-mini {:name "quantity" :type "number" :min 1 :max 99 :value 1}]]])))
       (pages (list [:h2 "items"]
                    (for [item items]
                      [:div.row-fluid

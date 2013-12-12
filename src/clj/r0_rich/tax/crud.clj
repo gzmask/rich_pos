@@ -55,7 +55,8 @@
             [:input.span3 {:name "name" :type "text" :value (:name tax)}]]
            [:div.row-fluid
             [:lable.span2.offset1 "税率:"]
-            [:input.span3 {:name "rate" :type "text" :value (:rate tax) :readonly "readonly"}]]
+            [:input.span3 {:name "rate" :type "number" :value (:rate tax) 
+                           :min 0 :max 0.3 :step 0.01}]]
            [:div.row-fluid
             [:input.span1.offset1 {:type "submit" :value "修改"}]]])
     (pages [:a {:href "/login"} "請登錄>>"]))))
@@ -70,7 +71,7 @@
   (let [taxs (j/with-connection SQLDB
                 (j/with-query-results rs ["select * from Tax"] (doall rs)))]
     (if (:login session) 
-      (pages (list [:a {:href "/taxs/new"} "添加商品"]
+      (pages (list [:a {:href "/taxs/new"} "添加税收"]
                     [:h2 "taxs"]
                     (for [tax taxs]
                       [:div.row-fluid

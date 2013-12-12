@@ -1,13 +1,14 @@
 (ns r0_rich.pages.css)
 
-(defn css [] 
+(defn pos_css [] 
   {:headers {"Content-Type" "text/css"}
-   :body "body {
-            background-color: #000;
+   :body "
+          body {
+            background-color: #fff;
             background-repeat: no-repeat;
             background-position: 10px 50px;
             background-size: 1280px 800px;
-            color: #E0771B;
+            color: #0A578F;
             font-family: advent-Bd1;}
           .trans_bg {
             padding: 10px;
@@ -31,9 +32,9 @@
             background-color: #ccc;
             font-family: advent-Re;
             font-size: 20px;
-            color: #fff;}
+            color: #0A578F;}
           :target {
-            background-color: #000;
+            background-color: #fff;
           }
           @font-face {
             font-family: advent-Re;

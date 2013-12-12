@@ -11,10 +11,13 @@
         total-taxable (reduce + (for [dom tax_doms] (reader/read-string (ef/from dom (ef/get-prop :value)))))
         total-notaxable (reduce + (for [dom no_tax_doms] (reader/read-string (ef/from dom (ef/get-prop :value)))))
         tax-rate (reader/read-string (ef/from ["#tax_change"] (ef/get-prop :value)))
-        total-with-tax (+ total-taxable (* total-taxable tax-rate))
-        total (+ total-with-tax total-notaxable)]
+        tax-rate2 (reader/read-string (ef/from ["#tax_change2"] (ef/get-prop :value)))
+        total-with-tax (+ total-taxable (* total-taxable (+ tax-rate tax-rate2)))
+        total (+ total-with-tax total-notaxable)] 
+    (ef/at ["#price_subtotal"] 
+           (ef/set-prop :value (format "%.2f" (+ total-taxable total-notaxable))))
     (ef/at ["#price_total"] 
-           (ef/set-prop :value total))))
+           (ef/set-prop :value (format "%.2f" total)))))
 
 (ef/at [".price_change_without_tax"]
        (event/listen :change 
@@ -25,5 +28,9 @@
                      #(update_total)))
 
 (ef/at ["#tax_change"]
+         (event/listen :change
+                       #(update_total)))
+
+(ef/at ["#tax_change2"]
          (event/listen :change
                        #(update_total)))

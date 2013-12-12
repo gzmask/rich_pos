@@ -44,18 +44,11 @@
        :headers {"Content-Type" "text/html; charset=utf-8"}
        :session (assoc session :invoice (merge (:invoice session) 
                                           (let [allitems (j/query SQLDB (s/select * :Item (s/where {:plucode (:plucode params)})))
-                                                items (take (dec (read-string (:quantity params))) allitems)]
-                                            (reduce  
-                                              (fn [first second] (merge first second)) 
-                                              {(keyword (str (:item_id params)))
+                                                items (take (read-string (:quantity params)) allitems)]
+                                              {(keyword (str (:plucode params)))
                                                {:price (read-string (:price params))
                                                 :item_name (:item_name params)
                                                 :taxable (:taxable params)
-                                                :plucode (:plucode params)}}
-                                              (for [item items]
-                                                {(keyword (str (:id item)))
-                                                 {:price (:price item)
-                                                  :item_name (:item_name item)
-                                                  :taxable (:taxable params)
-                                                  :plucode (:plucode item)}})))))}
+                                                :quantity (count items)
+                                                :plucode (:plucode params)}})))}
       (pages [:div "你還沒登錄"])))

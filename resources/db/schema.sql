@@ -1,18 +1,21 @@
 CREATE TABLE Invoice (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-total INTEGER,
+name varchar(255),
+tel varchar(255),
+address varchar(255),
+subtotal float,
+total float,
 timestamp INTEGER,
 refund Boolean
-, tax float);
+, tax float, tax2 float);
 CREATE TABLE Item (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-item_name varchar(255),
-item_type int,
-plucode varchar(255),
-price float,
-cost float,
-quantity int,
-user_id int
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_name varchar(255),
+    item_type int,
+    plucode varchar(255),
+    price float,
+    cost float,
+    user_id int
 , taxable Boolean, picture varchar(255));
 CREATE TABLE Item_sold (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,8 +28,8 @@ user_id int,
 invoice_id int
 , refund Boolean, taxable Boolean);
 CREATE TABLE Item_type (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-type_name varchar(255)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type_name varchar(255)
 );
 CREATE TABLE Tax (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,14 +38,14 @@ rate float,
 timestamp INTEGER
 );
 CREATE TABLE User (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-account_name varchar(255),
-password varchar(255),
-user_role int
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_name varchar(255),
+    password varchar(255),
+    user_role int
 );
 CREATE TABLE User_role (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-role_name varchar(255)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role_name varchar(255)
 );
 CREATE TABLE Version (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
