@@ -34,6 +34,7 @@
   (GET "/items/:id/update" {{id :id} :params session :session} (item/update id session))
   (POST "/items/:id/change" {params :params session :session} (item/change params session))
   (GET "/items/:id/single_remove" {{id :id} :params session :session} (item/single_remove id session))
+  (POST "/items/:plucode/add" {params :params session :session} (item/add params session))
   (GET "/items/:plucode/remove" {{plucode :plucode} :params session :session} (item/plu_remove plucode session))
   (GET "/invoices" {session :session} (invoice/index session))
   (GET "/invoices/new" {session :session} (invoice/new session))

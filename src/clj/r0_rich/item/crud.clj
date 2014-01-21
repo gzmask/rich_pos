@@ -51,10 +51,19 @@
     (pages [:a {:href "/login"} "請登錄>>"]))))
 
 (defn create [params session]
-  (if (:login session)
+  (cond 
+    (= nil (:login session)) 
+    (pages [:a {:href "/login"} "請登錄>>"])
+    (or (= "" (:plucode params)) 
+         (= "" (:quantity params))
+         (= "" (:item_name params))
+         (= "" (:price params))
+         (= "" (:cost params))) 
+    (pages [:div "必须完成填写表格"])
+    :else 
     (let [pic-name (:filename (:picture params))
-          pic-path (if (empty? pic-name) nil
-                       (str PRO_PIC_FOLDER "/" (:plucode params) "/" pic-name))]
+          pic-path (if (empty? pic-name) nil 
+                     (str PRO_PIC_FOLDER "/" (:plucode params) "/" pic-name))]
       (do (doseq [x (range (Integer. (:quantity params)))]
             (j/insert! SQLDB :Item
                        {:item_name (:item_name params)
@@ -70,8 +79,7 @@
           (if pic-path
             (do (io/make-parents pic-path)
                 (io/copy (:tempfile (:picture params)) (io/file pic-path))))
-          (pages [:div "添加成功."])))
-    (pages [:a {:href "/login"} "請登錄>>"])))
+          (pages [:div "添加成功."])))))
 
 (defn add [params session]
   (if (:login session)
